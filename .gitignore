@@ -1,0 +1,3 @@
+data/btcusdt/*.csv
+data/ethusdt/*.csv
+data/datasets/*.json
