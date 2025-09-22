@@ -1,0 +1,25 @@
+# Core dependencies
+pandas>=2.0.0
+numpy>=1.24.0
+requests>=2.31.0
+sqlite3
+asyncio
+logging
+
+# Data processing
+yfinance>=0.2.0
+python-binance>=1.0.0
+
+# Development and testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.10.0
+
+# Utilities
+python-dotenv>=1.0.0
+schedule>=1.2.0
+colorama>=0.4.6
+
+# Optional: For enhanced logging and monitoring
+rich>=13.0.0
+tqdm>=4.65.0
