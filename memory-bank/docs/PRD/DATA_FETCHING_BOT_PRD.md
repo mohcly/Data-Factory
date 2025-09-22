@@ -107,6 +107,29 @@ To provide reliable, high-quality market data with zero tolerance for data gaps 
 - **Timestamp Precision**: Accurate to the minute for all timeframes
 - **Data Consistency**: Identical data when fetched from multiple sources
 
+## 📁 Project Structure
+
+The data-fetching-bot is implemented as a standalone Python project that exists alongside the memory-bank knowledge repository:
+
+```
+/workspace/
+├── memory-bank/              # Knowledge and documentation repository
+│   ├── docs/PRD/            # This PRD and technical documentation
+│   ├── consolidated/        # Knowledge indexes and summaries
+│   └── planning/            # Implementation tasks and planning
+└── data-fetching-bot/       # Standalone bot implementation
+    ├── src/                 # Source code
+    ├── config/              # Configuration files
+    ├── data/                # Database and data files
+    ├── logs/                # Application logs
+    └── tests/               # Test files
+```
+
+The bot implementation is completely separate from the memory-bank but can reference it for:
+- Technical documentation and API guides
+- Implementation examples and best practices
+- Knowledge consolidation and indexes
+
 ## 🏗️ Technical Architecture
 
 ### System Components

@@ -39,7 +39,7 @@ The Data Fetching Bot eliminates data gaps and provides a robust foundation for 
 
 1. **Clone and navigate to the project**:
    ```bash
-   cd /workspace/memory-bank/data-fetching-bot
+   cd /workspace/data-fetching-bot
    ```
 
 2. **Install dependencies**:
@@ -97,6 +97,14 @@ data-fetching-bot/
 ├── test_basic.py               # Basic functionality tests
 └── README.md                   # This file
 ```
+
+### Relationship with Memory-Bank
+
+The data-fetching-bot is designed to work alongside the memory-bank knowledge repository:
+
+- **Documentation**: References `/workspace/memory-bank/docs/` for technical documentation
+- **Knowledge**: Uses `/workspace/memory-bank/consolidated/` for implementation guidance
+- **Planning**: Follows `/workspace/memory-bank/planning/tasks/` for development tasks
 
 ### Database Schema
 
@@ -243,7 +251,7 @@ result = validator.validate_ohlcv_data(test_data)
 
 ## 📝 License
 
-This project is part of the memory-bank system for quantitative trading applications.
+This project is a standalone data fetching bot for cryptocurrency data acquisition, designed to work alongside the memory-bank knowledge repository for quantitative trading applications.
 
 ## 🆘 Support
 
