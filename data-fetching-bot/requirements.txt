@@ -1,0 +1,19 @@
+# Core dependencies
+pandas>=2.0.0
+numpy>=1.24.0
+
+# HTTP client for API requests
+requests>=2.31.0
+
+# Asyncio support (built-in, no installation needed)
+
+# Cryptographic functions for API signing
+# (built-in, no installation needed)
+
+# Date/time utilities
+# (built-in, no installation needed)
+
+# Optional: For enhanced performance
+# aiohttp>=3.8.0  # For async HTTP requests
+# uvloop>=0.17.0  # Faster asyncio event loop
+# orjson>=3.8.0   # Faster JSON processing
