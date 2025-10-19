@@ -41,7 +41,7 @@ ENV/
 # DATA FILES AND DATABASES
 # ==============================================================================
 # Data files (keep structure, ignore actual data)
-data/raw/
+data/
 data/processed/*.csv
 data/btcusdt/*.csv
 data/ethusdt/*.csv

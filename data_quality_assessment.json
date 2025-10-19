@@ -1,0 +1,3032 @@
+{
+  "assessment_timestamp": "2025-10-18 02:51:44",
+  "summary": {
+    "total_datasets": 14,
+    "quality_distribution": {
+      "EXCELLENT": 14,
+      "GOOD": 0,
+      "FAIR": 0,
+      "POOR": 0,
+      "CRITICAL": 0
+    },
+    "average_quality_score": 100.0,
+    "datasets_by_quality": {
+      "EXCELLENT": [
+        "ADA",
+        "BTC",
+        "ZEC",
+        "LTC",
+        "USDC",
+        "XRP",
+        "BCH",
+        "HBAR",
+        "DOGE",
+        "XLM",
+        "LINK",
+        "TRX",
+        "ETH",
+        "BNB"
+      ]
+    },
+    "most_common_issues": [],
+    "critical_datasets": []
+  },
+  "detailed_results": {
+    "ADA": {
+      "symbol": "ADA",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.6411060514649379,
+            "std": 0.5411466705954481,
+            "min": 0.02012,
+            "max": 3.095,
+            "outliers_3std": 915,
+            "outliers_pct": 1.8028490926644731
+          },
+          "high": {
+            "mean": 0.6462205544499833,
+            "std": 0.5461344482377635,
+            "min": 0.02243,
+            "max": 3.101,
+            "outliers_3std": 891,
+            "outliers_pct": 1.7555612476109785
+          },
+          "low": {
+            "mean": 0.6357016154710066,
+            "std": 0.5358284341223322,
+            "min": 0.01765,
+            "max": 3.048,
+            "outliers_3std": 922,
+            "outliers_pct": 1.8166413808050754
+          },
+          "close": {
+            "mean": 0.6411166593107795,
+            "std": 0.5411441677770555,
+            "min": 0.02009,
+            "max": 3.095,
+            "outliers_3std": 917,
+            "outliers_pct": 1.8067897464189309
+          },
+          "volume": {
+            "mean": 10417654.45691427,
+            "std": 14849243.881536435,
+            "min": 0.0,
+            "max": 447599616.7,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 600304,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.710654490106545
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "46",
+          "zero_volume_pct": 0.007662784189344066,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "16",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "16"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.6488459775880222,
+            "std": 0.5410840018682231,
+            "min": 0.01831,
+            "max": 3.095,
+            "outliers_3std": 10420,
+            "outliers_pct": 1.7357872011514164
+          },
+          "high": {
+            "mean": 0.6502944240418189,
+            "std": 0.5425193860207022,
+            "min": 0.01886,
+            "max": 3.101,
+            "outliers_3std": 10415,
+            "outliers_pct": 1.7349542898264878
+          },
+          "low": {
+            "mean": 0.647361049734801,
+            "std": 0.5396082347240793,
+            "min": 0.01765,
+            "max": 3.09,
+            "outliers_3std": 10492,
+            "outliers_pct": 1.7477811242303898
+          },
+          "close": {
+            "mean": 0.6488484067905596,
+            "std": 0.5410862882550886,
+            "min": 0.01831,
+            "max": 3.095,
+            "outliers_3std": 10418,
+            "outliers_pct": 1.7354540366214453
+          },
+          "volume": {
+            "mean": 867039.7973064816,
+            "std": 1530463.0510139838,
+            "min": 0.0,
+            "max": 67730899.9,
+            "zero_count": 46
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.82795105708037,
+          "ratio_deviation_pct": 1.4337411909969213
+        }
+      },
+      "quality_score": 100
+    },
+    "BTC": {
+      "symbol": "BTC",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 45405.92411049592,
+            "std": 30493.87789871533,
+            "min": 4131.23,
+            "max": 126011.18,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "high": {
+            "mean": 45587.54668768348,
+            "std": 30581.5100241982,
+            "min": 4610.0,
+            "max": 126199.63,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "low": {
+            "mean": 45216.626429570664,
+            "std": 30404.672683164772,
+            "min": 3782.13,
+            "max": 125252.74,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "close": {
+            "mean": 45407.92655764191,
+            "std": 30494.7047145715,
+            "min": 4130.64,
+            "max": 126011.18,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "volume": {
+            "mean": 3159.8379702210714,
+            "std": 4508.847921090091,
+            "min": 0.0,
+            "max": 137207.1886,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 600304,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.710654490106545
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "31",
+          "zero_volume_pct": 0.005164050214557957,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "16",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "16"
+        },
+        "statistics": {
+          "open": {
+            "mean": 44407.900878171706,
+            "std": 29540.21585878851,
+            "min": 3888.65,
+            "max": 126011.18,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "high": {
+            "mean": 44456.22840107678,
+            "std": 29562.80273377304,
+            "min": 4094.25,
+            "max": 126199.63,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "low": {
+            "mean": 44358.68937956435,
+            "std": 29517.146039674717,
+            "min": 3782.13,
+            "max": 125868.13,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "close": {
+            "mean": 44408.074538633766,
+            "std": 29540.311012738457,
+            "min": 3882.22,
+            "max": 126011.18,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "volume": {
+            "mean": 266.4048459528074,
+            "std": 440.2817288560682,
+            "min": 0.0,
+            "max": 15659.93484,
+            "zero_count": 31
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.82795105708037,
+          "ratio_deviation_pct": 1.4337411909969213
+        }
+      },
+      "quality_score": 100
+    },
+    "ZEC": {
+      "symbol": "ZEC",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 68.97976178748054,
+            "std": 52.56593322607374,
+            "min": 16.29,
+            "max": 365.33,
+            "outliers_3std": 1052,
+            "outliers_pct": 2.072783874844837
+          },
+          "high": {
+            "mean": 69.64614860205307,
+            "std": 53.30393194420307,
+            "min": 16.69,
+            "max": 372.0,
+            "outliers_3std": 1052,
+            "outliers_pct": 2.072783874844837
+          },
+          "low": {
+            "mean": 68.30115086792898,
+            "std": 51.81336012723866,
+            "min": 15.78,
+            "max": 351.64,
+            "outliers_3std": 1041,
+            "outliers_pct": 2.0511102791953184
+          },
+          "close": {
+            "mean": 68.98407128642643,
+            "std": 52.57019086539384,
+            "min": 16.26,
+            "max": 365.16,
+            "outliers_3std": 1053,
+            "outliers_pct": 2.0747542017220657
+          },
+          "volume": {
+            "mean": 8115.786285117728,
+            "std": 11913.754306539837,
+            "min": 0.0,
+            "max": 285209.30432,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 608943,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.792836757990868
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2951",
+          "zero_volume_pct": 0.48461021803354337,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 68.97184335808114,
+            "std": 52.5547054914404,
+            "min": 15.92,
+            "max": 367.19,
+            "outliers_3std": 12633,
+            "outliers_pct": 2.074578408816589
+          },
+          "high": {
+            "mean": 69.14714112815157,
+            "std": 52.7552470435336,
+            "min": 16.32,
+            "max": 372.0,
+            "outliers_3std": 12665,
+            "outliers_pct": 2.0798334162639196
+          },
+          "low": {
+            "mean": 68.79855638376661,
+            "std": 52.357503474542376,
+            "min": 15.78,
+            "max": 362.59,
+            "outliers_3std": 12591,
+            "outliers_pct": 2.067681211541967
+          },
+          "close": {
+            "mean": 68.97342304616359,
+            "std": 52.55562179560397,
+            "min": 15.91,
+            "max": 367.02,
+            "outliers_3std": 12630,
+            "outliers_pct": 2.0740857518684015
+          },
+          "volume": {
+            "mean": 676.3937328413002,
+            "std": 1443.560541251424,
+            "min": 0.0,
+            "max": 157380.022,
+            "zero_count": 2951
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.998167596004176,
+          "ratio_deviation_pct": 0.01527003329853116
+        }
+      },
+      "quality_score": 100
+    },
+    "LTC": {
+      "symbol": "LTC",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 97.11549642385671,
+            "std": 50.03019368049209,
+            "min": 25.24,
+            "max": 409.83,
+            "outliers_3std": 970,
+            "outliers_pct": 1.9112170709120642
+          },
+          "high": {
+            "mean": 97.82314306543456,
+            "std": 50.65304106854016,
+            "min": 29.45,
+            "max": 413.49,
+            "outliers_3std": 976,
+            "outliers_pct": 1.923039032175438
+          },
+          "low": {
+            "mean": 96.35666955647942,
+            "std": 49.36886587004998,
+            "min": 24.0,
+            "max": 402.8,
+            "outliers_3std": 973,
+            "outliers_pct": 1.917128051543751
+          },
+          "close": {
+            "mean": 97.1163166709357,
+            "std": 50.02933865264868,
+            "min": 25.24,
+            "max": 409.84,
+            "outliers_3std": 969,
+            "outliers_pct": 1.9092467440348353
+          },
+          "volume": {
+            "mean": 33550.53414296593,
+            "std": 42199.69274584454,
+            "min": 0.0,
+            "max": 2249841.615,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 608943,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.792836757990868
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "31",
+          "zero_volume_pct": 0.005090788464601777,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 97.10875042491664,
+            "std": 50.02280601114433,
+            "min": 24.55,
+            "max": 411.05,
+            "outliers_3std": 11663,
+            "outliers_pct": 1.915285995569372
+          },
+          "high": {
+            "mean": 97.30548363311507,
+            "std": 50.20229826457967,
+            "min": 25.47,
+            "max": 413.49,
+            "outliers_3std": 11652,
+            "outliers_pct": 1.9134795867593517
+          },
+          "low": {
+            "mean": 96.90637772336653,
+            "std": 49.84212716551498,
+            "min": 24.0,
+            "max": 410.05,
+            "outliers_3std": 11651,
+            "outliers_pct": 1.9133153677766228
+          },
+          "close": {
+            "mean": 97.109170086527,
+            "std": 50.02286315820697,
+            "min": 24.51,
+            "max": 411.02,
+            "outliers_3std": 11665,
+            "outliers_pct": 1.9156144335348302
+          },
+          "volume": {
+            "mean": 2796.2603475726787,
+            "std": 4729.028360135472,
+            "min": 0.0,
+            "max": 425588.934,
+            "zero_count": 31
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.998167596004176,
+          "ratio_deviation_pct": 0.01527003329853116
+        }
+      },
+      "quality_score": 100
+    },
+    "USDC": {
+      "symbol": "USDC",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 46758,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.337671232876712
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.004277342914581462,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "16",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "16"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.9998225266264598,
+            "std": 0.001596413245506901,
+            "min": 0.9127,
+            "max": 1.0503,
+            "outliers_3std": 122,
+            "outliers_pct": 0.26091791778946916
+          },
+          "high": {
+            "mean": 1.0000717075152916,
+            "std": 0.013947821534457314,
+            "min": 0.9179,
+            "max": 3.99,
+            "outliers_3std": 21,
+            "outliers_pct": 0.044912100603105354
+          },
+          "low": {
+            "mean": 0.9996363253347021,
+            "std": 0.004268318863033318,
+            "min": 0.2,
+            "max": 1.0187,
+            "outliers_3std": 61,
+            "outliers_pct": 0.13045895889473458
+          },
+          "close": {
+            "mean": 0.999818824586167,
+            "std": 0.0015965204709088977,
+            "min": 0.9128,
+            "max": 1.05,
+            "outliers_3std": 123,
+            "outliers_pct": 0.2630565892467599
+          },
+          "volume": {
+            "mean": 20339162.86008747,
+            "std": 37722858.53616675,
+            "min": 0.0,
+            "max": 1819990708.0,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 543725,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.17242199391172
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "54",
+          "zero_volume_pct": 0.00993149110303922,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "18",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "18"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.9998241362821279,
+            "std": 0.0016481211323557418,
+            "min": 0.9065,
+            "max": 1.1042,
+            "outliers_3std": 1366,
+            "outliers_pct": 0.25122994160651063
+          },
+          "high": {
+            "mean": 0.999907824543657,
+            "std": 0.00438242577623933,
+            "min": 0.9089,
+            "max": 3.99,
+            "outliers_3std": 535,
+            "outliers_pct": 0.09839532852085153
+          },
+          "low": {
+            "mean": 0.9997478502919673,
+            "std": 0.002041981409488481,
+            "min": 0.2,
+            "max": 1.06,
+            "outliers_3std": 1017,
+            "outliers_pct": 0.187043082440572
+          },
+          "close": {
+            "mean": 0.9998202506781924,
+            "std": 0.0016476326930608366,
+            "min": 0.9068,
+            "max": 1.1045,
+            "outliers_3std": 1359,
+            "outliers_pct": 0.24994252609315373
+          },
+          "volume": {
+            "mean": 1740269.1081194722,
+            "std": 4463961.351148588,
+            "min": 0.0,
+            "max": 245522368.0,
+            "zero_count": 54
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.628491381154028,
+          "ratio_deviation_pct": 3.095905157049768
+        }
+      },
+      "quality_score": 100
+    },
+    "XRP": {
+      "symbol": "XRP",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.8495918875731484,
+            "std": 0.7794615773106441,
+            "min": 0.1194,
+            "max": 3.6534,
+            "outliers_3std": 416,
+            "outliers_pct": 0.8196559809272358
+          },
+          "high": {
+            "mean": 0.8555273235079699,
+            "std": 0.7847419926070334,
+            "min": 0.13357,
+            "max": 3.6607,
+            "outliers_3std": 408,
+            "outliers_pct": 0.8038933659094043
+          },
+          "low": {
+            "mean": 0.8432532027663389,
+            "std": 0.7738898614825571,
+            "min": 0.10129,
+            "max": 3.6003,
+            "outliers_3std": 431,
+            "outliers_pct": 0.8492108840856698
+          },
+          "close": {
+            "mean": 0.8496377463401178,
+            "std": 0.779481883903123,
+            "min": 0.11942,
+            "max": 3.6535,
+            "outliers_3std": 416,
+            "outliers_pct": 0.8196559809272358
+          },
+          "volume": {
+            "mean": 17877321.995292496,
+            "std": 27847345.6687763,
+            "min": 0.0,
+            "max": 1404207588.9,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 591665,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.628472222222222
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "31",
+          "zero_volume_pct": 0.005239451378736278,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "17",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "17"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.8611510490395746,
+            "std": 0.7874261540900636,
+            "min": 0.10886,
+            "max": 3.6534,
+            "outliers_3std": 4038,
+            "outliers_pct": 0.6824807957205513
+          },
+          "high": {
+            "mean": 0.8628048220361184,
+            "std": 0.7888971361394553,
+            "min": 0.11155,
+            "max": 3.6607,
+            "outliers_3std": 4042,
+            "outliers_pct": 0.6831568539629689
+          },
+          "low": {
+            "mean": 0.8594474772379641,
+            "std": 0.7859115925842015,
+            "min": 0.10129,
+            "max": 3.6346,
+            "outliers_3std": 4012,
+            "outliers_pct": 0.6780864171448371
+          },
+          "close": {
+            "mean": 0.8611605425874439,
+            "std": 0.7874256498469665,
+            "min": 0.10896,
+            "max": 3.6535,
+            "outliers_3std": 4038,
+            "outliers_pct": 0.6824807957205513
+          },
+          "volume": {
+            "mean": 1495316.6480934313,
+            "std": 2806796.97408276,
+            "min": 0.0,
+            "max": 266807485.6,
+            "zero_count": 31
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.657734518156563,
+          "ratio_deviation_pct": 2.8522123486953115
+        }
+      },
+      "quality_score": 100
+    },
+    "BCH": {
+      "symbol": "BCH",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 345.409747010029,
+            "std": 187.21347694029927,
+            "min": 88.4,
+            "max": 1592.46,
+            "outliers_3std": 593,
+            "outliers_pct": 1.1684038381967567
+          },
+          "high": {
+            "mean": 347.9129306641972,
+            "std": 189.36205157138792,
+            "min": 90.0,
+            "max": 1650.0,
+            "outliers_3std": 608,
+            "outliers_pct": 1.1979587413551909
+          },
+          "low": {
+            "mean": 342.8012519456978,
+            "std": 184.98428911922764,
+            "min": 87.0,
+            "max": 1572.25,
+            "outliers_3std": 582,
+            "outliers_pct": 1.1467302425472385
+          },
+          "close": {
+            "mean": 345.4141654680512,
+            "std": 187.2117201273779,
+            "min": 88.4,
+            "max": 1592.32,
+            "outliers_3std": 594,
+            "outliers_pct": 1.1703741650739858
+          },
+          "volume": {
+            "mean": 5485.249885125609,
+            "std": 8684.040378990892,
+            "min": 0.0,
+            "max": 237922.808,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 600304,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.710654490106545
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "74",
+          "zero_volume_pct": 0.012327087608944801,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "16",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "16"
+        },
+        "statistics": {
+          "open": {
+            "mean": 348.86448262880134,
+            "std": 186.24071437581208,
+            "min": 87.6,
+            "max": 1639.27,
+            "outliers_3std": 7107,
+            "outliers_pct": 1.183900157253658
+          },
+          "high": {
+            "mean": 349.5465078360298,
+            "std": 186.84089459238692,
+            "min": 88.1,
+            "max": 1650.0,
+            "outliers_3std": 7148,
+            "outliers_pct": 1.1907300301180737
+          },
+          "low": {
+            "mean": 348.18103585849843,
+            "std": 185.65135422661544,
+            "min": 87.0,
+            "max": 1602.24,
+            "outliers_3std": 7059,
+            "outliers_pct": 1.1759042085343425
+          },
+          "close": {
+            "mean": 348.86581218849113,
+            "std": 186.2409828832352,
+            "min": 87.6,
+            "max": 1640.5,
+            "outliers_3std": 7108,
+            "outliers_pct": 1.1840667395186437
+          },
+          "volume": {
+            "mean": 461.1960799274699,
+            "std": 963.1989496166218,
+            "min": 0.0,
+            "max": 65409.642,
+            "zero_count": 74
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.82795105708037,
+          "ratio_deviation_pct": 1.4337411909969213
+        }
+      },
+      "quality_score": 100
+    },
+    "HBAR": {
+      "symbol": "HBAR",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.1282152318089571,
+            "std": 0.10221497776023307,
+            "min": 0.01004,
+            "max": 0.5616,
+            "outliers_3std": 173,
+            "outliers_pct": 0.34086654976060526
+          },
+          "high": {
+            "mean": 0.12949024569976156,
+            "std": 0.10345074319866744,
+            "min": 0.01009,
+            "max": 0.576,
+            "outliers_3std": 180,
+            "outliers_pct": 0.3546588379012078
+          },
+          "low": {
+            "mean": 0.1269419655980927,
+            "std": 0.10098057403353781,
+            "min": 0.00985,
+            "max": 0.546,
+            "outliers_3std": 185,
+            "outliers_pct": 0.36451047228735245
+          },
+          "close": {
+            "mean": 0.12821768782140958,
+            "std": 0.10221530508218393,
+            "min": 0.01001,
+            "max": 0.5617,
+            "outliers_3std": 174,
+            "outliers_pct": 0.3428368766378342
+          },
+          "volume": {
+            "mean": 7150908.902309224,
+            "std": 15809951.988351919,
+            "min": 0.0,
+            "max": 839944824.0,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 600346,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.71105403348554
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "6711",
+          "zero_volume_pct": 1.1178553700699263,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.12943478132610195,
+            "std": 0.10242059014004087,
+            "min": 0.00986,
+            "max": 0.5646,
+            "outliers_3std": 1938,
+            "outliers_pct": 0.32281384401661706
+          },
+          "high": {
+            "mean": 0.12979348427406862,
+            "std": 0.10275944456749059,
+            "min": 0.00995,
+            "max": 0.576,
+            "outliers_3std": 1944,
+            "outliers_pct": 0.3238132676823032
+          },
+          "low": {
+            "mean": 0.1290827278269531,
+            "std": 0.10207522707509938,
+            "min": 0.00985,
+            "max": 0.5605,
+            "outliers_3std": 1924,
+            "outliers_pct": 0.3204818554633495
+          },
+          "close": {
+            "mean": 0.12943639437924132,
+            "std": 0.1024203088285027,
+            "min": 0.00986,
+            "max": 0.5643,
+            "outliers_3std": 1939,
+            "outliers_pct": 0.32298041462756477
+          },
+          "volume": {
+            "mean": 602932.6231156699,
+            "std": 1595068.5291456056,
+            "min": 0.0,
+            "max": 187506653.0,
+            "zero_count": 6711
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.828778594368806,
+          "ratio_deviation_pct": 1.4268450469266134
+        }
+      },
+      "quality_score": 100
+    },
+    "DOGE": {
+      "symbol": "DOGE",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.12431026645321458,
+            "std": 0.10397120972652919,
+            "min": 0.001328,
+            "max": 0.73623,
+            "outliers_3std": 453,
+            "outliers_pct": 0.8925580753847063
+          },
+          "high": {
+            "mean": 0.12545671089984828,
+            "std": 0.10533200242923701,
+            "min": 0.0014912,
+            "max": 0.73995,
+            "outliers_3std": 449,
+            "outliers_pct": 0.8846767678757906
+          },
+          "low": {
+            "mean": 0.12311759602388037,
+            "std": 0.10254816286697889,
+            "min": 0.0011345,
+            "max": 0.71117,
+            "outliers_3std": 457,
+            "outliers_pct": 0.9004393828936221
+          },
+          "close": {
+            "mean": 0.12431389030205112,
+            "std": 0.10397032683315281,
+            "min": 0.001329,
+            "max": 0.73623,
+            "outliers_3std": 453,
+            "outliers_pct": 0.8925580753847063
+          },
+          "volume": {
+            "mean": 81665443.72051701,
+            "std": 258357295.38959208,
+            "min": 0.0,
+            "max": 15229066811.0,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 600304,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.710654490106545
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "6075",
+          "zero_volume_pct": 1.011987259788374,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "16",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "16"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.12605525259551828,
+            "std": 0.10368632881888949,
+            "min": 0.0012192,
+            "max": 0.73623,
+            "outliers_3std": 5356,
+            "outliers_pct": 0.8922146112636263
+          },
+          "high": {
+            "mean": 0.1263747606526027,
+            "std": 0.10406707099556185,
+            "min": 0.0012382,
+            "max": 0.73995,
+            "outliers_3std": 5335,
+            "outliers_pct": 0.8887163836989259
+          },
+          "low": {
+            "mean": 0.125728051324329,
+            "std": 0.10329363538114653,
+            "min": 0.0011345,
+            "max": 0.72743,
+            "outliers_3std": 5352,
+            "outliers_pct": 0.8915482822036835
+          },
+          "close": {
+            "mean": 0.1260556733391748,
+            "std": 0.10368638604788681,
+            "min": 0.0012183,
+            "max": 0.73623,
+            "outliers_3std": 5356,
+            "outliers_pct": 0.8922146112636263
+          },
+          "volume": {
+            "mean": 6766960.999565887,
+            "std": 24170571.519440733,
+            "min": 0.0,
+            "max": 2174740295.0,
+            "zero_count": 6075
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.82795105708037,
+          "ratio_deviation_pct": 1.4337411909969213
+        }
+      },
+      "quality_score": 100
+    },
+    "XLM": {
+      "symbol": "XLM",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.19102365869997828,
+            "std": 0.13116842479209406,
+            "min": 0.02851,
+            "max": 0.789,
+            "outliers_3std": 470,
+            "outliers_pct": 0.9260536322975983
+          },
+          "high": {
+            "mean": 0.1925835808720667,
+            "std": 0.1327642790376645,
+            "min": 0.03227,
+            "max": 0.7985,
+            "outliers_3std": 485,
+            "outliers_pct": 0.9556085354560321
+          },
+          "low": {
+            "mean": 0.18939706972986817,
+            "std": 0.12951331336699395,
+            "min": 0.026,
+            "max": 0.7677,
+            "outliers_3std": 465,
+            "outliers_pct": 0.9162019979114535
+          },
+          "close": {
+            "mean": 0.19102896518432408,
+            "std": 0.1311678045054118,
+            "min": 0.02859,
+            "max": 0.78922,
+            "outliers_3std": 470,
+            "outliers_pct": 0.9260536322975983
+          },
+          "volume": {
+            "mean": 6210819.476837033,
+            "std": 11896332.020752221,
+            "min": 0.0,
+            "max": 472064354.3,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 608943,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.792836757990868
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "42",
+          "zero_volume_pct": 0.006897197274621763,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.19101369320281203,
+            "std": 0.13115424549125262,
+            "min": 0.02664,
+            "max": 0.796,
+            "outliers_3std": 5660,
+            "outliers_pct": 0.929479442246647
+          },
+          "high": {
+            "mean": 0.1914471659416398,
+            "std": 0.13160292947016602,
+            "min": 0.02719,
+            "max": 0.7985,
+            "outliers_3std": 5701,
+            "outliers_pct": 0.9362124205385397
+          },
+          "low": {
+            "mean": 0.1905740388180831,
+            "std": 0.13070138432364978,
+            "min": 0.026,
+            "max": 0.79133,
+            "outliers_3std": 5629,
+            "outliers_pct": 0.9243886537820453
+          },
+          "close": {
+            "mean": 0.19101466073179257,
+            "std": 0.1311548401092341,
+            "min": 0.02666,
+            "max": 0.7956,
+            "outliers_3std": 5662,
+            "outliers_pct": 0.9298078802121054
+          },
+          "volume": {
+            "mean": 517644.82191257644,
+            "std": 1182761.4648091318,
+            "min": 0.0,
+            "max": 81764728.0,
+            "zero_count": 42
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.998167596004176,
+          "ratio_deviation_pct": 0.01527003329853116
+        }
+      },
+      "quality_score": 100
+    },
+    "LINK": {
+      "symbol": "LINK",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 14.174006506019348,
+            "std": 8.275352108598504,
+            "min": 1.5591,
+            "max": 52.277,
+            "outliers_3std": 492,
+            "outliers_pct": 0.9694008235966347
+          },
+          "high": {
+            "mean": 14.294447853328867,
+            "std": 8.366399639419264,
+            "min": 1.6476,
+            "max": 53.0,
+            "outliers_3std": 498,
+            "outliers_pct": 0.9812227848600082
+          },
+          "low": {
+            "mean": 14.046749892617182,
+            "std": 8.177661924529739,
+            "min": 0.0001,
+            "max": 51.6,
+            "outliers_3std": 484,
+            "outliers_pct": 0.9536382085788032
+          },
+          "close": {
+            "mean": 14.17420152109235,
+            "std": 8.2751272296979,
+            "min": 1.5585,
+            "max": 52.269,
+            "outliers_3std": 492,
+            "outliers_pct": 0.9694008235966347
+          },
+          "volume": {
+            "mean": 281343.00485929893,
+            "std": 340659.0192960949,
+            "min": 0.0,
+            "max": 7888290.6,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 600304,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.710654490106545
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "63",
+          "zero_volume_pct": 0.010494682694101655,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "16",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "16"
+        },
+        "statistics": {
+          "open": {
+            "mean": 14.274615699545565,
+            "std": 8.290356565613829,
+            "min": 1.4129,
+            "max": 52.765,
+            "outliers_3std": 5812,
+            "outliers_pct": 0.9681761240971242
+          },
+          "high": {
+            "mean": 14.30843318718516,
+            "std": 8.316342478685215,
+            "min": 1.4868,
+            "max": 53.0,
+            "outliers_3std": 5841,
+            "outliers_pct": 0.9730070097817105
+          },
+          "low": {
+            "mean": 14.24007956385432,
+            "std": 8.26391111741626,
+            "min": 0.0001,
+            "max": 52.566,
+            "outliers_3std": 5779,
+            "outliers_pct": 0.9626789093525947
+          },
+          "close": {
+            "mean": 14.27464575481756,
+            "std": 8.290318008088558,
+            "min": 1.4132,
+            "max": 52.753,
+            "outliers_3std": 5811,
+            "outliers_pct": 0.9680095418321384
+          },
+          "volume": {
+            "mean": 23575.73545059504,
+            "std": 37438.11001990073,
+            "min": 0.0,
+            "max": 1735380.69,
+            "zero_count": 63
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.82795105708037,
+          "ratio_deviation_pct": 1.4337411909969213
+        }
+      },
+      "quality_score": 100
+    },
+    "TRX": {
+      "symbol": "TRX",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.1056867038401671,
+            "std": 0.08388794208650006,
+            "min": 0.00757,
+            "max": 0.4332,
+            "outliers_3std": 129,
+            "outliers_pct": 0.25417216716253227
+          },
+          "high": {
+            "mean": 0.10610376884125078,
+            "std": 0.08412118921097655,
+            "min": 0.00885,
+            "max": 0.45,
+            "outliers_3std": 129,
+            "outliers_pct": 0.25417216716253227
+          },
+          "low": {
+            "mean": 0.10525420467755602,
+            "std": 0.08365546552557951,
+            "min": 0.00684,
+            "max": 0.3955,
+            "outliers_3std": 128,
+            "outliers_pct": 0.25220184028530335
+          },
+          "close": {
+            "mean": 0.10569271136681575,
+            "std": 0.08389220307275472,
+            "min": 0.00757,
+            "max": 0.4334,
+            "outliers_3std": 129,
+            "outliers_pct": 0.25417216716253227
+          },
+          "volume": {
+            "mean": 42501702.117711276,
+            "std": 68481296.80625378,
+            "min": 0.0,
+            "max": 2980459748.5,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 608943,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.792836757990868
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "31",
+          "zero_volume_pct": 0.005090788464601777,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 0.10569177686581506,
+            "std": 0.08388883567333616,
+            "min": 0.0071,
+            "max": 0.4434,
+            "outliers_3std": 1532,
+            "outliers_pct": 0.2515834815409652
+          },
+          "high": {
+            "mean": 0.10580172055512584,
+            "std": 0.08394756239185233,
+            "min": 0.00733,
+            "max": 0.45,
+            "outliers_3std": 1528,
+            "outliers_pct": 0.25092660561004887
+          },
+          "low": {
+            "mean": 0.10557574191673112,
+            "std": 0.08382300877581414,
+            "min": 0.00684,
+            "max": 0.4256,
+            "outliers_3std": 1540,
+            "outliers_pct": 0.25289723340279796
+          },
+          "close": {
+            "mean": 0.10569228106735772,
+            "std": 0.08388918695697034,
+            "min": 0.00711,
+            "max": 0.4433,
+            "outliers_3std": 1533,
+            "outliers_pct": 0.25174770052369433
+          },
+          "volume": {
+            "mean": 3542333.3980742036,
+            "std": 6850903.992996715,
+            "min": 0.0,
+            "max": 731456386.9,
+            "zero_count": 31
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.998167596004176,
+          "ratio_deviation_pct": 0.01527003329853116
+        }
+      },
+      "quality_score": 100
+    },
+    "ETH": {
+      "symbol": "ETH",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 2121.567904754399,
+            "std": 1176.3235337602339,
+            "min": 96.51,
+            "max": 4935.01,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "high": {
+            "mean": 2133.0224036017576,
+            "std": 1182.4002492287907,
+            "min": 105.69,
+            "max": 4956.78,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "low": {
+            "mean": 2109.365377613146,
+            "std": 1169.7801511517762,
+            "min": 86.0,
+            "max": 4897.31,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "close": {
+            "mean": 2121.6420036254012,
+            "std": 1176.3179400348092,
+            "min": 96.62,
+            "max": 4935.0,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "volume": {
+            "mean": 26649.487608238327,
+            "std": 28898.13580436822,
+            "min": 0.0,
+            "max": 508838.4049,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 591665,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.628472222222222
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "31",
+          "zero_volume_pct": 0.005239451378736278,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "17",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "17"
+        },
+        "statistics": {
+          "open": {
+            "mean": 2100.420512688768,
+            "std": 1183.7791717833288,
+            "min": 88.44,
+            "max": 4951.5,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "high": {
+            "mean": 2103.505622810205,
+            "std": 1185.4465814327655,
+            "min": 93.59,
+            "max": 4956.78,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "low": {
+            "mean": 2097.2686636525737,
+            "std": 1182.064986056813,
+            "min": 86.0,
+            "max": 4943.16,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "close": {
+            "mean": 2100.4275624382035,
+            "std": 1183.779777447511,
+            "min": 88.35,
+            "max": 4951.5,
+            "outliers_3std": 0,
+            "outliers_pct": 0.0
+          },
+          "volume": {
+            "mean": 2240.650991648856,
+            "std": 3194.015698251173,
+            "min": 0.0,
+            "max": 114205.9848,
+            "zero_count": 31
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.657734518156563,
+          "ratio_deviation_pct": 2.8522123486953115
+        }
+      },
+      "quality_score": 100
+    },
+    "BNB": {
+      "symbol": "BNB",
+      "overall_quality": "EXCELLENT",
+      "issues": [],
+      "warnings": [],
+      "recommendations": [],
+      "1h_data": {
+        "completeness": {
+          "total_rows": 50753,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "name": 0,
+            "market_cap_rank": 0,
+            "timeframe": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "name": 0.0,
+            "market_cap_rank": 0.0,
+            "timeframe": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.793721461187214
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "2",
+          "zero_volume_pct": 0.003940653754457865,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "15",
+          "expected_interval": "1:00:00",
+          "irregular_intervals": "15"
+        },
+        "statistics": {
+          "open": {
+            "mean": 364.1924883100506,
+            "std": 239.89430983937285,
+            "min": 7.6276,
+            "max": 1368.76,
+            "outliers_3std": 337,
+            "outliers_pct": 0.6640001576261502
+          },
+          "high": {
+            "mean": 365.9714051425532,
+            "std": 240.97114121326817,
+            "min": 8.7639,
+            "max": 1375.11,
+            "outliers_3std": 339,
+            "outliers_pct": 0.667940811380608
+          },
+          "low": {
+            "mean": 362.25435229050504,
+            "std": 238.74406940105305,
+            "min": 6.38,
+            "max": 1343.5,
+            "outliers_3std": 334,
+            "outliers_pct": 0.6580891769944633
+          },
+          "close": {
+            "mean": 364.2066221366225,
+            "std": 239.91480470501565,
+            "min": 7.6653,
+            "max": 1368.76,
+            "outliers_3std": 338,
+            "outliers_pct": 0.6659704845033791
+          },
+          "volume": {
+            "mean": 55357.47529005181,
+            "std": 88144.4288138133,
+            "min": 0.0,
+            "max": 2002898.55,
+            "zero_count": 2
+          }
+        }
+      },
+      "5m_data": {
+        "completeness": {
+          "total_rows": 600304,
+          "missing_values": {
+            "timestamp": 0,
+            "open": 0,
+            "high": 0,
+            "low": 0,
+            "close": 0,
+            "volume": 0,
+            "symbol": 0,
+            "timeframe": 0,
+            "api_source": 0
+          },
+          "missing_pct": {
+            "timestamp": 0.0,
+            "open": 0.0,
+            "high": 0.0,
+            "low": 0.0,
+            "close": 0.0,
+            "volume": 0.0,
+            "symbol": 0.0,
+            "timeframe": 0.0,
+            "api_source": 0.0
+          },
+          "date_range": {
+            "start": "2020-01-01 00:00:00",
+            "end": "2025-10-17 00:00:00",
+            "days": 2116
+          },
+          "data_density": 5.710654490106545
+        },
+        "consistency": {
+          "ohlc_violations": 0,
+          "ohlc_violations_pct": 0.0,
+          "zero_volume_count": "31",
+          "zero_volume_pct": 0.005164050214557957,
+          "negative_volume_count": "0",
+          "open_negative_count": "0",
+          "open_negative_pct": 0.0,
+          "high_negative_count": "0",
+          "high_negative_pct": 0.0,
+          "low_negative_count": "0",
+          "low_negative_pct": 0.0,
+          "close_negative_count": "0",
+          "close_negative_pct": 0.0
+        },
+        "integrity": {
+          "duplicate_timestamps": "0",
+          "duplicate_pct": 0.0,
+          "timestamp_gaps": "16",
+          "expected_interval": "0:05:00",
+          "irregular_intervals": "16"
+        },
+        "statistics": {
+          "open": {
+            "mean": 361.0847074362323,
+            "std": 240.15288291539792,
+            "min": 6.55,
+            "max": 1369.64,
+            "outliers_3std": 4056,
+            "outliers_pct": 0.6756576667821637
+          },
+          "high": {
+            "mean": 361.5669421683014,
+            "std": 240.4393315651857,
+            "min": 7.1378,
+            "max": 1375.11,
+            "outliers_3std": 4068,
+            "outliers_pct": 0.6776566539619926
+          },
+          "low": {
+            "mean": 360.5702426976998,
+            "std": 239.85689666274652,
+            "min": 6.38,
+            "max": 1367.47,
+            "outliers_3std": 4049,
+            "outliers_pct": 0.6744915909272635
+          },
+          "close": {
+            "mean": 361.08196375453105,
+            "std": 240.15448020160105,
+            "min": 6.5527,
+            "max": 1369.64,
+            "outliers_3std": 4057,
+            "outliers_pct": 0.6758242490471494
+          },
+          "volume": {
+            "mean": 4652.552589333071,
+            "std": 8703.610663647338,
+            "min": 0.0,
+            "max": 389804.721,
+            "zero_count": 31
+          }
+        }
+      },
+      "cross_validation": {
+        "date_alignment": {
+          "1h_range": "2020-01-01 to 2025-10-17",
+          "5m_range": "2020-01-01 to 2025-10-17",
+          "ranges_match": true
+        },
+        "data_ratio": {
+          "expected_5m_to_1h": 12.0,
+          "actual_5m_to_1h": 11.82795105708037,
+          "ratio_deviation_pct": 1.4337411909969213
+        }
+      },
+      "quality_score": 100
+    }
+  }
+}

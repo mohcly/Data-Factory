@@ -1,0 +1,566 @@
+#!/usr/bin/env python3
+"""
+Real-Time Liquidation Data Monitor
+
+A comprehensive real-time liquidation data monitoring system for cryptocurrency futures.
+Captures live liquidation events from Binance Futures and saves them to structured CSV files.
+
+Features:
+- Real-time WebSocket connections to Binance Futures
+- Multi-symbol monitoring (BTC, ETH, etc.)
+- Automatic reconnection and error handling
+- Structured data storage with timestamps
+- Live statistics and monitoring dashboard
+- Easy terminal operation with simple commands
+
+Usage:
+    # Monitor BTC and ETH liquidations
+    python realtime_liquidation_monitor.py --symbols BTC ETH
+
+    # Monitor all major cryptocurrencies
+    python realtime_liquidation_monitor.py --all
+
+    # Monitor for specific duration (in hours)
+    python realtime_liquidation_monitor.py --symbols BTC --duration 24
+
+    # Monitor with custom output directory
+    python realtime_liquidation_monitor.py --symbols BTC ETH --output /path/to/output
+
+Author: MVP Crypto Data Factory
+Created: 2025-10-18
+"""
+
+import asyncio
+import websockets
+import json
+import pandas as pd
+from datetime import datetime, timedelta
+import os
+import sys
+import signal
+import logging
+from pathlib import Path
+from typing import Dict, List, Set, Optional
+import argparse
+import gzip
+import threading
+import time
+
+# ANSI color codes for terminal output
+class Colors:
+    # Basic colors
+    BLACK = '\033[30m'
+    RED = '\033[31m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[33m'
+    BLUE = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN = '\033[36m'
+    WHITE = '\033[37m'
+
+    # Bright colors
+    BRIGHT_RED = '\033[91m'
+    BRIGHT_GREEN = '\033[92m'
+    BRIGHT_YELLOW = '\033[93m'
+    BRIGHT_BLUE = '\033[94m'
+    BRIGHT_MAGENTA = '\033[95m'
+    BRIGHT_CYAN = '\033[96m'
+    BRIGHT_WHITE = '\033[97m'
+
+    # Background colors
+    BG_RED = '\033[41m'
+    BG_GREEN = '\033[42m'
+    BG_YELLOW = '\033[43m'
+    BG_BLUE = '\033[44m'
+    BG_MAGENTA = '\033[45m'
+    BG_CYAN = '\033[46m'
+    BG_WHITE = '\033[47m'
+
+    # Text styles
+    BOLD = '\033[1m'
+    DIM = '\033[2m'
+    UNDERLINE = '\033[4m'
+    BLINK = '\033[5m'
+    REVERSE = '\033[7m'
+
+    # Reset
+    RESET = '\033[0m'
+
+    @staticmethod
+    def colorize(text: str, color: str, style: str = "") -> str:
+        """Colorize text with specified color and style."""
+        return f"{style}{color}{text}{Colors.RESET}"
+
+    @staticmethod
+    def success(text: str) -> str:
+        """Green text for success messages."""
+        return Colors.colorize(text, Colors.BRIGHT_GREEN, Colors.BOLD)
+
+    @staticmethod
+    def error(text: str) -> str:
+        """Red text for error messages."""
+        return Colors.colorize(text, Colors.BRIGHT_RED, Colors.BOLD)
+
+    @staticmethod
+    def warning(text: str) -> str:
+        """Yellow text for warning messages."""
+        return Colors.colorize(text, Colors.BRIGHT_YELLOW)
+
+    @staticmethod
+    def info(text: str) -> str:
+        """Blue text for info messages."""
+        return Colors.colorize(text, Colors.BRIGHT_BLUE)
+
+    @staticmethod
+    def data(text: str) -> str:
+        """Cyan text for data values."""
+        return Colors.colorize(text, Colors.BRIGHT_CYAN)
+
+    @staticmethod
+    def header(text: str) -> str:
+        """Magenta bold text for headers."""
+        return Colors.colorize(text, Colors.BRIGHT_MAGENTA, Colors.BOLD)
+
+    @staticmethod
+    def highlight(text: str) -> str:
+        """Yellow background for highlights."""
+        return Colors.colorize(text, Colors.BLACK, Colors.BG_YELLOW + Colors.BOLD)
+
+    @staticmethod
+    def critical(text: str) -> str:
+        """White text on red background for critical messages."""
+        return Colors.colorize(text, Colors.BRIGHT_WHITE, Colors.BG_RED + Colors.BOLD)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logs/realtime_liquidation_monitor.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+class RealtimeLiquidationMonitor:
+    """Real-time liquidation data monitor for cryptocurrency futures."""
+
+    def __init__(self, symbols: List[str], output_dir: str = "data/realtime_liquidations",
+                 duration_hours: Optional[int] = None):
+        """
+        Initialize the liquidation monitor.
+
+        Args:
+            symbols: List of cryptocurrency symbols to monitor (e.g., ['BTC', 'ETH'])
+            output_dir: Directory to save liquidation data
+            duration_hours: How long to run (None = indefinite)
+        """
+        self.symbols = [s.upper() for s in symbols]
+        self.output_dir = Path(output_dir)
+        self.duration_hours = duration_hours
+
+        # Create output directory
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Data storage
+        self.liquidation_data: Dict[str, List[Dict]] = {symbol: [] for symbol in self.symbols}
+        self.stats = {
+            'start_time': datetime.now(),
+            'total_liquidations': 0,
+            'symbol_stats': {symbol: {'count': 0, 'volume': 0.0} for symbol in self.symbols},
+            'last_update': datetime.now()
+        }
+
+        # Control flags
+        self.running = True
+        self.connected = False
+
+        # WebSocket URLs
+        self.ws_base_url = "wss://fstream.binance.com/ws/"
+
+        # Setup signal handlers for graceful shutdown
+        signal.signal(signal.SIGINT, self.signal_handler)
+        signal.signal(signal.SIGTERM, self.signal_handler)
+
+        logger.info(Colors.success(f"Initialized liquidation monitor for symbols: {self.symbols}"))
+
+    def signal_handler(self, signum, frame):
+        """Handle shutdown signals gracefully."""
+        logger.info(f"Received signal {signum}, shutting down gracefully...")
+        self.running = False
+
+    async def connect_and_monitor(self):
+        """Main connection and monitoring loop."""
+        logger.info("Starting real-time liquidation monitoring...")
+
+        # Calculate end time if duration is specified
+        end_time = None
+        if self.duration_hours:
+            end_time = datetime.now() + timedelta(hours=self.duration_hours)
+            logger.info(f"Will run for {self.duration_hours} hours until {end_time}")
+
+        try:
+            # Create WebSocket connection for liquidation streams
+            streams = [f"{symbol.lower()}usdt@forceOrder" for symbol in self.symbols]
+            ws_url = self.ws_base_url + "/".join(streams)
+
+            logger.info(f"Connecting to WebSocket: {ws_url}")
+
+            async with websockets.connect(ws_url) as websocket:
+                self.connected = True
+                logger.info("✅ Connected to Binance Futures WebSocket")
+
+                # Start statistics display thread
+                stats_thread = threading.Thread(target=self.display_stats_loop, daemon=True)
+                stats_thread.start()
+
+                while self.running:
+                    # Check duration limit
+                    if end_time and datetime.now() >= end_time:
+                        logger.info(f"Duration limit reached ({self.duration_hours} hours)")
+                        break
+
+                    try:
+                        # Set a timeout for receiving messages
+                        message = await asyncio.wait_for(websocket.recv(), timeout=30.0)
+                        await self.process_message(message)
+
+                    except asyncio.TimeoutError:
+                        # Send ping to keep connection alive
+                        await websocket.ping()
+                        continue
+
+                    except websockets.exceptions.ConnectionClosed:
+                        logger.warning("WebSocket connection closed, attempting reconnection...")
+                        break
+
+        except Exception as e:
+            logger.error(f"Error in WebSocket connection: {e}")
+            self.connected = False
+
+        finally:
+            self.connected = False
+            logger.info("WebSocket connection closed")
+
+    async def process_message(self, message: str):
+        """Process incoming WebSocket message."""
+        try:
+            data = json.loads(message)
+
+            # Check if this is a liquidation event
+            if 'stream' in data and 'data' in data:
+                stream_data = data['data']
+
+                # Check for force order (liquidation) events
+                if stream_data.get('e') == 'forceOrder':  # Force order event
+                    await self.process_liquidation_event(stream_data)
+
+        except json.JSONDecodeError as e:
+            logger.warning(f"Failed to parse WebSocket message: {e}")
+        except Exception as e:
+            logger.error(f"Error processing message: {e}")
+
+    async def process_liquidation_event(self, event_data: Dict):
+        """Process a liquidation event and store the data."""
+        try:
+            # Extract liquidation details
+            symbol = event_data.get('s', '').replace('USDT', '')  # Remove USDT suffix
+            if symbol not in self.symbols:
+                return  # Not monitoring this symbol
+
+            liquidation = {
+                'timestamp': datetime.fromtimestamp(event_data['E'] / 1000),  # Event time
+                'symbol': symbol,
+                'side': event_data.get('S'),  # LONG or SHORT
+                'price': float(event_data.get('ap', 0)),  # Average price
+                'quantity': float(event_data.get('q', 0)),  # Quantity
+                'amount': float(event_data.get('ap', 0)) * float(event_data.get('q', 0)),  # Total amount
+                'event_time': event_data['E'],  # Raw timestamp
+                'event_type': 'liquidation'
+            }
+
+            # Add to data storage
+            self.liquidation_data[symbol].append(liquidation)
+
+            # Update statistics
+            self.stats['total_liquidations'] += 1
+            self.stats['symbol_stats'][symbol]['count'] += 1
+            self.stats['symbol_stats'][symbol]['volume'] += liquidation['amount']
+            self.stats['last_update'] = datetime.now()
+
+            # Log significant liquidations
+            if liquidation['amount'] > 10000:  # $10K+ liquidations
+                amount_str = f"${liquidation['amount']:,.0f}"
+                quantity_str = f"{liquidation['quantity']:.2f}"
+                price_str = f"${liquidation['price']:.2f}"
+                logger.info(f"💰 LARGE LIQUIDATION: {Colors.data(symbol)} {Colors.data(amount_str)} {Colors.warning(liquidation['side'])} {Colors.data(quantity_str)} @ {Colors.data(price_str)}")
+
+            # Periodic save to file (every 100 liquidations or 5 minutes)
+            total_liquidations = sum(len(data) for data in self.liquidation_data.values())
+            if total_liquidations % 100 == 0:
+                await self.save_data_to_files()
+
+        except Exception as e:
+            logger.error(f"Error processing liquidation event: {e}")
+
+    async def save_data_to_files(self):
+        """Save accumulated liquidation data to CSV files."""
+        try:
+            for symbol, liquidations in self.liquidation_data.items():
+                if not liquidations:
+                    continue
+
+                # Create symbol directory
+                symbol_dir = self.output_dir / symbol.lower()
+                symbol_dir.mkdir(exist_ok=True)
+
+                # Convert to DataFrame
+                df = pd.DataFrame(liquidations)
+
+                # Save to CSV (append mode)
+                csv_file = symbol_dir / f"{symbol.lower()}_liquidations_realtime.csv"
+
+                if csv_file.exists():
+                    # Append to existing file
+                    df.to_csv(csv_file, mode='a', header=False, index=False)
+                else:
+                    # Create new file with header
+                    df.to_csv(csv_file, index=False)
+
+                # Also save compressed version every hour
+                current_hour = datetime.now().hour
+                if hasattr(self, 'last_compressed_hour'):
+                    if current_hour != self.last_compressed_hour:
+                        await self.save_compressed_data(symbol, df)
+                else:
+                    self.last_compressed_hour = current_hour
+
+            # Clear processed data to prevent memory buildup
+            # Keep last 1000 records for continuity
+            for symbol in self.liquidation_data:
+                if len(self.liquidation_data[symbol]) > 1000:
+                    self.liquidation_data[symbol] = self.liquidation_data[symbol][-1000:]
+
+            logger.info(f"💾 Saved liquidation data to files (Total: {self.stats['total_liquidations']} liquidations)")
+
+        except Exception as e:
+            logger.error(f"Error saving data to files: {e}")
+
+    async def save_compressed_data(self, symbol: str, df: pd.DataFrame):
+        """Save compressed version of the data."""
+        try:
+            symbol_dir = self.output_dir / symbol.lower()
+            timestamp = datetime.now().strftime('%Y%m%d_%H')
+            compressed_file = symbol_dir / f"{symbol.lower()}_liquidations_{timestamp}.csv.gz"
+
+            with gzip.open(compressed_file, 'wt', encoding='utf-8') as f:
+                df.to_csv(f, index=False)
+
+            logger.info(f"📦 Saved compressed data: {compressed_file}")
+
+        except Exception as e:
+            logger.error(f"Error saving compressed data: {e}")
+
+    def display_stats_loop(self):
+        """Display real-time statistics every 30 seconds with colored output."""
+        while self.running:
+            time.sleep(30)  # Update every 30 seconds
+
+            if not self.liquidation_data:
+                continue
+
+            # Clear screen and show stats with colors
+            print("\n" + Colors.header("="*70))
+            print(Colors.header("📊 REAL-TIME LIQUIDATION MONITOR"))
+            print(Colors.header("="*70))
+            print(f"⏰ Running since: {Colors.data(self.stats['start_time'].strftime('%Y-%m-%d %H:%M:%S'))}")
+            connection_status = Colors.success("✅ Connected") if self.connected else Colors.error("❌ Disconnected")
+            print(f"🔗 Connection: {connection_status}")
+            total_liq_formatted = f"{self.stats['total_liquidations']:,}"
+            print(f"💰 Total Liquidations: {Colors.highlight(total_liq_formatted)}")
+
+            if self.duration_hours:
+                elapsed = datetime.now() - self.stats['start_time']
+                remaining = timedelta(hours=self.duration_hours) - elapsed
+                remaining_str = str(remaining).split('.')[0]
+                if remaining.total_seconds() < 3600:  # Less than 1 hour remaining
+                    remaining_display = Colors.warning(remaining_str)
+                else:
+                    remaining_display = Colors.data(remaining_str)
+                print(f"⏳ Time remaining: {remaining_display}")
+
+            print(f"\n{Colors.header('📈 Per-Symbol Statistics:')}")
+            print(Colors.dim("-" * 40))
+            for symbol in self.symbols:
+                stats = self.stats['symbol_stats'][symbol]
+                recent_count = len([l for l in self.liquidation_data[symbol]
+                                  if (datetime.now() - l['timestamp']).seconds < 1800])  # Last 30 min
+
+                # Color coding based on activity
+                if stats['count'] > 100:
+                    count_display = Colors.success(f"{stats['count']:6d}")
+                elif stats['count'] > 10:
+                    count_display = Colors.data(f"{stats['count']:6d}")
+                else:
+                    count_display = Colors.warning(f"{stats['count']:6d}")
+
+                volume_display = Colors.data(f"${stats['volume']:,.0f}")
+
+                if recent_count > 5:
+                    recent_display = Colors.success(f"{recent_count}")
+                elif recent_count > 0:
+                    recent_display = Colors.warning(f"{recent_count}")
+                else:
+                    recent_display = Colors.dim(f"{recent_count}")
+
+                print(f"  {Colors.info(symbol):6} {count_display} {volume_display} Recent (30min): {recent_display}")
+
+            print(f"\n📁 Data saved to: {Colors.data(str(self.output_dir))}")
+            print(Colors.info("💡 Press Ctrl+C to stop monitoring"))
+            print(Colors.header("="*70))
+
+    async def run_monitor(self):
+        """Run the liquidation monitor."""
+        try:
+            while self.running:
+                try:
+                    await self.connect_and_monitor()
+
+                    # If we get here, connection was lost - wait before reconnecting
+                    if self.running:
+                        logger.info("Attempting reconnection in 5 seconds...")
+                        await asyncio.sleep(5)
+
+                except Exception as e:
+                    logger.error(f"Connection error: {e}")
+                    if self.running:
+                        logger.info("Retrying connection in 10 seconds...")
+                        await asyncio.sleep(10)
+
+        except KeyboardInterrupt:
+            logger.info("Monitoring stopped by user")
+        finally:
+            # Final save of all data
+            await self.save_data_to_files()
+            self.print_final_summary()
+
+    def print_final_summary(self):
+        """Print final summary when monitoring stops with colored output."""
+        print("\n" + Colors.header("="*80))
+        print(Colors.success("🏁 LIQUIDATION MONITORING SESSION COMPLETE"))
+        print(Colors.header("="*80))
+
+        runtime = datetime.now() - self.stats['start_time']
+        runtime_str = str(runtime).split('.')[0]
+        print(f"⏰ Session Duration: {Colors.data(runtime_str)}")
+
+        total_liq = self.stats['total_liquidations']
+        print(f"💰 Total Liquidations Captured: {Colors.highlight(f'{total_liq:,}')}")
+
+        if total_liq > 0:
+            avg_per_hour = total_liq / (runtime.total_seconds() / 3600)
+            print(f"📊 Average Liquidations/Hour: {Colors.data(f'{avg_per_hour:.1f}')}")
+
+        print(f"\n{Colors.header('📈 Final Symbol Statistics:')}")
+        print(Colors.dim("-" * 50))
+        for symbol in self.symbols:
+            stats = self.stats['symbol_stats'][symbol]
+            if stats['count'] > 0:
+                avg_size = stats['volume'] / stats['count']
+                count_display = Colors.success(f"{stats['count']:6d}") if stats['count'] > 50 else Colors.data(f"{stats['count']:6d}")
+                volume_display = Colors.data(f"${stats['volume']:,.0f}")
+                avg_display = Colors.data(f"${avg_size:.0f}")
+                print(f"  {Colors.info(symbol):6} {count_display} Volume: {volume_display} Avg: {avg_display}")
+            else:
+                print(f"  {Colors.warning(symbol):6} {Colors.dim('No liquidations captured')}")
+
+        print(f"\n📁 Data Location: {Colors.data(str(self.output_dir))}")
+        files_found = 0
+        for symbol in self.symbols:
+            csv_file = self.output_dir / symbol.lower() / f"{symbol.lower()}_liquidations_realtime.csv"
+            if csv_file.exists():
+                size_mb = csv_file.stat().st_size / (1024 * 1024)
+                size_display = Colors.success(f"{size_mb:.1f} MB") if size_mb > 1 else Colors.data(f"{size_mb:.1f} MB")
+                print(f"   {Colors.info(symbol):6}: {size_display}")
+                files_found += 1
+
+        if files_found == 0:
+            print(Colors.warning("   No data files were created"))
+
+        print(f"\n{Colors.success('🎯 Next Steps:')}")
+        print("  • Analyze liquidation patterns for market signals")
+        print("  • Use data for capitulation detection algorithms")
+        print("  • Monitor liquidation clusters for trading opportunities")
+        print(Colors.header("="*80))
+
+
+def main():
+    """Main entry point with command line argument parsing."""
+    parser = argparse.ArgumentParser(description='Real-Time Cryptocurrency Liquidation Monitor')
+    parser.add_argument('--symbols', nargs='+', help='Cryptocurrency symbols to monitor (e.g., BTC ETH)')
+    parser.add_argument('--all', action='store_true', help='Monitor all major cryptocurrencies')
+    parser.add_argument('--duration', type=int, help='Monitoring duration in hours (default: indefinite)')
+    parser.add_argument('--output', default='data/realtime_liquidations',
+                       help='Output directory for liquidation data')
+    parser.add_argument('--quality-data', action='store_true',
+                       help='Monitor symbols from quality data categories (full_history, good_coverage, established)')
+
+    args = parser.parse_args()
+
+    # Determine symbols to monitor
+    if args.all:
+        # Major cryptocurrencies available on Binance Futures
+        symbols = ['BTC', 'ETH', 'BNB', 'ADA', 'XRP', 'SOL', 'DOT', 'DOGE', 'AVAX', 'LTC']
+    elif args.quality_data:
+        # Symbols from quality data categories (full_history, good_coverage, established)
+        symbols = ['AAVE', 'ADA', 'AVAX', 'BCH', 'BNB', 'BTC', 'DOGE', 'DOT', 'ETC', 'ETH',
+                  'FIL', 'HBAR', 'LINK', 'LTC', 'SHIB', 'SOL', 'THETA', 'TRX', 'UNI',
+                  'USDC', 'XLM', 'XMR', 'XRP', 'ZEC']
+    elif args.symbols:
+        symbols = args.symbols
+    else:
+        print("❌ Please specify --symbols, --all, or --quality-data")
+        print("\nExamples:")
+        print("  python realtime_liquidation_monitor.py --symbols BTC ETH")
+        print("  python realtime_liquidation_monitor.py --all")
+        print("  python realtime_liquidation_monitor.py --quality-data")
+        print("  python realtime_liquidation_monitor.py --symbols BTC --duration 24")
+        sys.exit(1)
+
+    # Validate symbols (extended list for quality data categories)
+    valid_symbols = ['AAVE', 'ADA', 'ALGO', 'AVAX', 'BCH', 'BNB', 'BTC', 'DOGE', 'DOT', 'ETC', 'ETH',
+                    'FIL', 'HBAR', 'ICP', 'LINK', 'LTC', 'SHIB', 'SOL', 'THETA', 'TRX', 'UNI',
+                    'USDC', 'VET', 'XLM', 'XMR', 'XRP', 'ZEC']
+
+    invalid_symbols = [s for s in symbols if s.upper() not in valid_symbols]
+    if invalid_symbols:
+        print(f"⚠️  Warning: These symbols may not be available on Binance Futures: {invalid_symbols}")
+
+    # Create and run monitor
+    monitor = RealtimeLiquidationMonitor(
+        symbols=symbols,
+        output_dir=args.output,
+        duration_hours=args.duration
+    )
+
+    print(Colors.success("🚀 Starting Real-Time Liquidation Monitor"))
+    print(f"📊 Monitoring: {Colors.data(', '.join(symbols))}")
+    print(f"📁 Output: {Colors.data(args.output)}")
+    if args.duration:
+        print(f"⏰ Duration: {Colors.warning(f'{args.duration} hours')}")
+    else:
+        print(f"⏰ Duration: {Colors.info('Indefinite (Ctrl+C to stop)')}")
+    print(Colors.header("="*60))
+
+    # Run the async monitor
+    try:
+        asyncio.run(monitor.run_monitor())
+    except KeyboardInterrupt:
+        print(f"\n{Colors.warning('⚠️  Monitoring stopped by user')}")
+    except Exception as e:
+        print(f"\n{Colors.error('❌ Error:')} {Colors.data(str(e))}")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,10 @@
+# Requirements for Real-Time Liquidation Monitor
+websockets>=11.0.0
+pandas>=2.0.0
+asyncio
+python-binance>=1.0.0
+python-dotenv>=1.0.0
+
+
+
+
