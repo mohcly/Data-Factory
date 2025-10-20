@@ -3,30 +3,37 @@
 # Real-Time Orderbook Monitor Launcher
 # Easy-to-use script for running the orderbook data monitor
 
-echo -e "\033[92;1m🚀 Real-Time Cryptocurrency Orderbook Monitor\033[0m"
-echo -e "\033[95;1m===============================================\033[0m"
+echo -e "\033[92;1m🕯️ 5-Minute Orderbook Candle Monitor with Buffer Recovery\033[0m"
+echo -e "\033[95;1m=======================================================\033[0m"
 echo ""
 
 # Function to show usage
 show_usage() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
+    echo "Creates 5-minute candles from real-time orderbook data with buffer recovery."
+    echo "Automatically recovers available historical data before starting real-time monitoring."
+    echo "Each candle contains OHLC, spread analysis, and volume metrics."
+    echo ""
     echo "Options:"
     echo "  --all                 Monitor all major cryptocurrencies"
     echo "  --quality-data        Monitor symbols from quality data categories"
     echo "  --symbols SYMBOLS     Monitor specific symbols (space separated)"
     echo "  --duration HOURS      Run for specific duration in hours"
-    echo "  --output DIR          Custom output directory"
+    echo "  --output DIR          Custom output directory (default: data/orderbook_5min_candles)"
     echo "  --verbose             Show verbose logging with all WebSocket messages"
-    echo "  --depth LEVELS        Orderbook depth to capture (default: 20)"
+    echo "  --depth LEVELS        Orderbook depth to capture (default: 10)"
+    echo "  --storage-efficient   Enable storage-efficient mode (reduced data volume)"
+    echo "  --no-buffer-recovery  Skip buffer data recovery on startup"
     echo "  --help                Show this help message"
     echo ""
     echo "Examples:"
     echo "  $0 --quality-data                           # Monitor quality data symbols"
+    echo "  $0 --quality-data --storage-efficient       # Monitor with reduced data volume"
     echo "  $0 --all                                    # Monitor all major cryptos"
     echo "  $0 --symbols \"BTC ETH BNB\"                  # Monitor BTC, ETH, BNB"
     echo "  $0 --quality-data --verbose                 # Monitor with verbose WebSocket logs"
-    echo "  $0 --symbols BTC --depth 50                 # Monitor BTC with 50 levels depth"
+    echo "  $0 --symbols BTC --depth 5                  # Monitor BTC with minimal depth"
     echo "  $0 --quality-data --duration 24             # Monitor for 24 hours"
     echo "  $0 --all --output /custom/path              # Custom output directory"
     echo ""
@@ -119,11 +126,19 @@ while [[ $# -gt 0 ]]; do
         --depth)
             if [ -z "$2" ] || [[ "$2" == --* ]]; then
                 echo "❌ Error: --depth requires a number"
-                echo "Example: --depth 50"
+                echo "Example: --depth 10"
                 exit 1
             fi
             PYTHON_CMD="$PYTHON_CMD --depth $2"
             shift 2
+            ;;
+        --storage-efficient)
+            PYTHON_CMD="$PYTHON_CMD --storage-efficient"
+            shift
+            ;;
+        --no-buffer-recovery)
+            PYTHON_CMD="$PYTHON_CMD --no-buffer-recovery"
+            shift
             ;;
         *)
             echo "❌ Unknown option: $1"
@@ -139,7 +154,7 @@ echo ""
 echo -e "\033[94m💡 Controls:\033[0m"
 echo -e "   \033[96m• Press Ctrl+C to stop monitoring\033[0m"
 echo -e "   \033[96m• Statistics update every 30 seconds\033[0m"
-echo -e "   \033[96m• Data saves every 2000 updates or 10 minutes (space optimized)\033[0m"
+echo -e "   \033[96m• Recovers buffer data, then creates 5-minute candles every 5 minutes\033[0m"
 echo ""
 echo -e "\033[92;1m📊 Starting orderbook monitoring...\033[0m"
 echo -e "\033[95;1m=====================================\033[0m"

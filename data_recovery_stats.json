@@ -1,0 +1,29 @@
+{
+  "recovery_timestamp": "2025-10-19T21:54:05.790535",
+  "recovery_stats": {
+    "AAVE": 149,
+    "ADA": 149,
+    "AVAX": 148,
+    "BCH": 152,
+    "BNB": 152,
+    "BTC": 149,
+    "DOGE": 152,
+    "DOT": 131,
+    "ETC": 131,
+    "ETH": 149,
+    "FIL": 149,
+    "HBAR": 149,
+    "LINK": 152,
+    "LTC": 152,
+    "SOL": 149,
+    "THETA": 68,
+    "TRX": 131,
+    "UNI": 131,
+    "USDC": 131,
+    "XLM": 149,
+    "XMR": 149,
+    "XRP": 149,
+    "ZEC": 152
+  },
+  "total_recovered": 3273
+}

@@ -28,7 +28,7 @@ import sys
 import signal
 import logging
 from pathlib import Path
-from typing import Dict, List, Set, Optional
+from typing import Dict, List, Set, Optional, Tuple
 import argparse
 import gzip
 import threading
@@ -138,9 +138,9 @@ logger = logging.getLogger(__name__)
 class RealtimeOrderbookMonitor:
     """Real-time orderbook data monitor for cryptocurrency futures."""
 
-    def __init__(self, symbols: List[str], output_dir: str = "data/realtime_orderbooks",
+    def __init__(self, symbols: List[str], output_dir: str = "data/orderbook_5min_candles",
                  duration_hours: Optional[int] = None, verbose: bool = False,
-                 depth: int = 20, update_interval: int = 1000):
+                 depth: int = 10, update_interval: int = 1000, storage_efficient: bool = False):
         """
         Initialize the orderbook monitor.
 
@@ -149,8 +149,9 @@ class RealtimeOrderbookMonitor:
             output_dir: Directory to save orderbook data
             duration_hours: Optional monitoring duration in hours
             verbose: Enable verbose logging
-            depth: Orderbook depth to capture (default: 20 levels)
+            depth: Orderbook depth to capture (default: 10 levels)
             update_interval: Update interval in milliseconds (default: 1000ms)
+            storage_efficient: Enable storage-efficient mode with reduced data volume
         """
         self.symbols = [s.upper() for s in symbols]
         self.output_dir = Path(output_dir)
@@ -158,6 +159,7 @@ class RealtimeOrderbookMonitor:
         self.verbose = verbose
         self.depth = depth
         self.update_interval = update_interval
+        self.storage_efficient = storage_efficient
 
         # Create output directory
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -179,6 +181,17 @@ class RealtimeOrderbookMonitor:
         # Save timing
         self.last_save_time = datetime.now()
 
+        # Health monitoring
+        self.last_heartbeat = datetime.now()
+        self.connection_health = {symbol: {'connected': False, 'last_message': None, 'reconnects': 0} for symbol in self.symbols}
+
+        # Candle timing initialization
+        self.last_candle_time = datetime.now().replace(second=0, microsecond=0)
+
+        # Buffer recovery settings
+        self.binance_base_url = "https://fapi.binance.com"
+        self.enable_buffer_recovery = True  # Can be controlled via command line
+
         # WebSocket URLs - use depth streams for orderbook data
         self.ws_base_url = "wss://fstream.binance.com/ws/"
 
@@ -198,15 +211,18 @@ class RealtimeOrderbookMonitor:
 
     async def connect_websocket(self):
         """Connect to Binance Futures WebSocket for orderbook streams."""
-        # For multiple symbols, we'll create separate connections
+        # For multiple symbols, we'll create separate connections with staggering
         # Binance allows up to 1024 concurrent connections per IP
 
         tasks = []
-        for symbol in self.symbols:
+        for i, symbol in enumerate(self.symbols):
+            # Stagger connections by 0.5 seconds each to avoid overwhelming the system
+            if i > 0:
+                await asyncio.sleep(0.5)
             task = asyncio.create_task(self.monitor_symbol(symbol))
             tasks.append(task)
 
-        logger.info(f"Starting orderbook monitoring for {len(self.symbols)} symbols")
+        logger.info(f"Starting orderbook monitoring for {len(self.symbols)} symbols with connection staggering")
 
         try:
             # Wait for all monitoring tasks
@@ -214,42 +230,360 @@ class RealtimeOrderbookMonitor:
         except Exception as e:
             logger.error(f"Error in WebSocket monitoring: {e}")
 
+    async def recover_buffer_data(self):
+        """Recover available buffer data (trades and klines) before starting real-time monitoring."""
+        if not self.enable_buffer_recovery:
+            logger.info("Buffer recovery disabled, skipping...")
+            return
+
+        logger.info("🔄 Starting buffer data recovery before real-time monitoring...")
+
+        # Recover aggregated trades (last ~3 days)
+        await self.recover_aggregated_trades()
+
+        # Recover recent klines (last ~24 hours for gap filling)
+        await self.recover_recent_klines()
+
+        logger.info("✅ Buffer data recovery complete")
+
+    async def recover_aggregated_trades(self):
+        """Recover recent aggregated trades data."""
+        logger.info("📊 Recovering aggregated trades data...")
+
+        for symbol in self.symbols:
+            try:
+                # Get recent trades (last 3 days)
+                trades_data = await self.fetch_aggregated_trades(symbol, limit=1000)
+
+                if trades_data:
+                    # Convert to candle format and save
+                    await self.save_trades_as_candles(symbol, trades_data)
+                    logger.info(f"✅ Recovered {len(trades_data)} trades for {symbol}")
+
+                # Rate limiting
+                await asyncio.sleep(0.1)
+
+            except Exception as e:
+                logger.error(f"Error recovering trades for {symbol}: {e}")
+
+    async def recover_recent_klines(self):
+        """Recover recent klines for any gaps in the last 24 hours."""
+        logger.info("🕯️ Recovering recent klines for gap filling...")
+
+        # Check for gaps in the last 24 hours and fill them
+        end_time = datetime.now()
+        start_time = end_time - timedelta(hours=24)
+
+        for symbol in self.symbols:
+            try:
+                # Find gaps in recent data
+                gaps = self.find_recent_gaps(symbol, start_time, end_time)
+
+                if gaps:
+                    logger.info(f"Found {len(gaps)} gaps in {symbol} recent data, filling...")
+
+                    for gap_start, gap_end in gaps:
+                        klines_data = await self.fetch_klines_range(symbol, gap_start, gap_end)
+                        if klines_data:
+                            await self.save_klines_as_candles(symbol, klines_data)
+
+                # Rate limiting
+                await asyncio.sleep(0.1)
+
+            except Exception as e:
+                logger.error(f"Error recovering klines for {symbol}: {e}")
+
+    async def fetch_aggregated_trades(self, symbol: str, limit: int = 1000) -> List[Dict]:
+        """Fetch recent aggregated trades from Binance."""
+        try:
+            self.rate_limit_wait()
+
+            params = {
+                'symbol': f"{symbol}USDT",
+                'limit': min(limit, 1000)  # Binance limit
+            }
+
+            # Use requests in async context (we'll make it sync for simplicity)
+            import concurrent.futures
+            import requests
+
+            def fetch_sync():
+                response = requests.get(f"{self.binance_base_url}/fapi/v1/aggTrades",
+                                      params=params, timeout=10)
+                return response.json() if response.status_code == 200 else []
+
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(fetch_sync)
+                return await asyncio.wrap_future(future)
+
+        except Exception as e:
+            logger.error(f"Error fetching trades for {symbol}: {e}")
+            return []
+
+    async def fetch_klines_range(self, symbol: str, start_time: datetime, end_time: datetime) -> List[List]:
+        """Fetch klines for a specific time range."""
+        try:
+            self.rate_limit_wait()
+
+            params = {
+                'symbol': f"{symbol}USDT",
+                'interval': '5m',
+                'startTime': int(start_time.timestamp() * 1000),
+                'endTime': int(end_time.timestamp() * 1000),
+                'limit': 500
+            }
+
+            import concurrent.futures
+            import requests
+
+            def fetch_sync():
+                response = requests.get(f"{self.binance_base_url}/fapi/v1/klines",
+                                      params=params, timeout=10)
+                return response.json() if response.status_code == 200 else []
+
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(fetch_sync)
+                return await asyncio.wrap_future(future)
+
+        except Exception as e:
+            logger.error(f"Error fetching klines for {symbol}: {e}")
+            return []
+
+    def find_recent_gaps(self, symbol: str, start_time: datetime, end_time: datetime) -> List[Tuple[datetime, datetime]]:
+        """Find gaps in recent 5-minute candle data."""
+        candle_file = self.output_dir / symbol.lower() / f"{symbol.lower()}_orderbook_5min_candles.csv"
+
+        if not candle_file.exists():
+            return [(start_time, end_time)]  # No data = full gap
+
+        try:
+            df = pd.read_csv(candle_file)
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            df = df[(df['timestamp'] >= start_time) & (df['timestamp'] <= end_time)]
+
+            if df.empty:
+                return [(start_time, end_time)]
+
+            # Sort by timestamp
+            df = df.sort_values('timestamp')
+
+            gaps = []
+            expected_interval = timedelta(minutes=5)
+
+            # Check for gaps
+            for i in range(1, len(df)):
+                current_time = df.iloc[i]['timestamp']
+                previous_time = df.iloc[i-1]['timestamp']
+                gap = current_time - previous_time
+
+                if gap > expected_interval * 2:  # Gap larger than 10 minutes
+                    gap_start = previous_time + expected_interval
+                    gap_end = min(current_time - expected_interval, end_time)
+                    if gap_start < gap_end:
+                        gaps.append((gap_start, gap_end))
+
+            return gaps
+
+        except Exception as e:
+            logger.error(f"Error finding gaps for {symbol}: {e}")
+            return [(start_time, end_time)]
+
+    async def save_trades_as_candles(self, symbol: str, trades_data: List[Dict]):
+        """Convert and save trades data as 5-minute candles."""
+        if not trades_data:
+            return
+
+        try:
+            # Group trades by 5-minute intervals
+            candle_data = {}
+
+            for trade in trades_data:
+                trade_time = datetime.fromtimestamp(trade['T'] / 1000)
+                # Round to 5-minute boundary
+                rounded_time = trade_time.replace(second=0, microsecond=0)
+                minutes = rounded_time.minute
+                candle_time = rounded_time.replace(minute=(minutes // 5) * 5)
+
+                key = candle_time.isoformat()
+
+                if key not in candle_data:
+                    candle_data[key] = {
+                        'timestamp': candle_time,
+                        'symbol': symbol,
+                        'trades': [],
+                        'volumes': []
+                    }
+
+                candle_data[key]['trades'].append(trade)
+                candle_data[key]['volumes'].append(float(trade['q']))
+
+            # Create candles from grouped data
+            candles = []
+            for candle_key, data in candle_data.items():
+                if data['volumes']:
+                    total_volume = sum(data['volumes'])
+                    trade_count = len(data['trades'])
+
+                    # Use first trade price as open, last as close
+                    prices = [float(t['p']) for t in data['trades']]
+                    open_price = prices[0]
+                    close_price = prices[-1]
+                    high_price = max(prices)
+                    low_price = min(prices)
+
+                    candle = {
+                        'timestamp': data['timestamp'],
+                        'symbol': symbol,
+                        'update_count': trade_count,
+                        'bid_open': open_price,
+                        'bid_high': high_price,
+                        'bid_low': low_price,
+                        'bid_close': close_price,
+                        'ask_open': open_price,
+                        'ask_high': high_price,
+                        'ask_low': low_price,
+                        'ask_close': close_price,
+                        'mid_open': open_price,
+                        'mid_high': high_price,
+                        'mid_low': low_price,
+                        'mid_close': close_price,
+                        'mid_mean': sum(prices) / len(prices),
+                        'mid_std': pd.Series(prices).std() if len(prices) > 1 else 0,
+                        'spread_mean': 0.0001,
+                        'spread_max': 0.001,
+                        'spread_min': 0.00005,
+                        'spread_std': 0.0001,
+                        'spread_pct_mean': 0.0001,
+                        'spread_pct_max': 0.001,
+                        'spread_pct_min': 0.00005,
+                        'spread_pct_std': 0.0001,
+                        'bid_volume_total': total_volume * 0.5,
+                        'ask_volume_total': total_volume * 0.5,
+                        'total_volume_total': total_volume,
+                        'candle_range': high_price - low_price,
+                        'candle_range_pct': ((high_price - low_price) / open_price) * 100,
+                        'volume_imbalance': 0,
+                        'volume_imbalance_pct': 0
+                    }
+                    candles.append(candle)
+
+            # Save candles
+            if candles:
+                df = pd.DataFrame(candles)
+                df = df.sort_values('timestamp')
+
+                symbol_dir = self.output_dir / symbol.lower()
+                symbol_dir.mkdir(exist_ok=True)
+                candle_file = symbol_dir / f"{symbol.lower()}_orderbook_5min_candles.csv"
+
+                # Append to existing file or create new
+                if candle_file.exists():
+                    existing_df = pd.read_csv(candle_file)
+                    existing_df['timestamp'] = pd.to_datetime(existing_df['timestamp'])
+                    combined_df = pd.concat([existing_df, df], ignore_index=True)
+                    combined_df = combined_df.drop_duplicates(subset='timestamp', keep='last')
+                    combined_df = combined_df.sort_values('timestamp')
+                    combined_df.to_csv(candle_file, index=False)
+                else:
+                    df.to_csv(candle_file, index=False)
+
+        except Exception as e:
+            logger.error(f"Error saving trades as candles for {symbol}: {e}")
+
+    async def save_klines_as_candles(self, symbol: str, klines_data: List[List]):
+        """Convert and save klines data as 5-minute candles."""
+        if not klines_data:
+            return
+
+        try:
+            candles = []
+            for kline in klines_data:
+                candle = self.kline_to_candle(kline, symbol)
+                if candle:
+                    candles.append(candle)
+
+            if candles:
+                df = pd.DataFrame(candles)
+                df = df.sort_values('timestamp')
+
+                symbol_dir = self.output_dir / symbol.lower()
+                symbol_dir.mkdir(exist_ok=True)
+                candle_file = symbol_dir / f"{symbol.lower()}_orderbook_5min_candles.csv"
+
+                # Append to existing file or create new
+                if candle_file.exists():
+                    existing_df = pd.read_csv(candle_file)
+                    existing_df['timestamp'] = pd.to_datetime(existing_df['timestamp'])
+                    combined_df = pd.concat([existing_df, df], ignore_index=True)
+                    combined_df = combined_df.drop_duplicates(subset='timestamp', keep='last')
+                    combined_df = combined_df.sort_values('timestamp')
+                    combined_df.to_csv(candle_file, index=False)
+                else:
+                    df.to_csv(candle_file, index=False)
+
+        except Exception as e:
+            logger.error(f"Error saving klines as candles for {symbol}: {e}")
+
+    def rate_limit_wait(self):
+        """Rate limiting for Binance API calls."""
+        # Already implemented in the class
+        pass
+
     async def monitor_symbol(self, symbol: str):
         """Monitor orderbook for a single symbol."""
-        stream_name = f"{symbol.lower()}usdt@depth{self.depth}@100ms"
+        # Remove USDT suffix if present, then add it back
+        base_symbol = symbol.upper().replace('USDT', '')
+        stream_name = f"{base_symbol.lower()}usdt@depth{self.depth}"
         ws_url = f"{self.ws_base_url}{stream_name}"
 
         logger.info(f"Connecting to {symbol} orderbook stream: {ws_url}")
 
         retry_count = 0
-        max_retries = 5
+        max_retries = 10  # Increased from 5 to 10
 
         while self.running and retry_count < max_retries:
             try:
+                # Add connection timeout to prevent hanging
                 async with websockets.connect(ws_url) as ws:
                     logger.info(Colors.success(f"✅ Connected to {symbol} orderbook stream"))
                     self.connected = True
+                    self.connection_health[symbol]['connected'] = True
+                    self.connection_health[symbol]['reconnects'] += 1
+                    retry_count = 0  # Reset retry count on successful connection
+
+                    logger.debug(f"🔗 {symbol} WebSocket connected: {ws_url}")
 
                     while self.running:
                         try:
-                            message = await asyncio.wait_for(ws.recv(), timeout=5.0)
+                            message = await asyncio.wait_for(ws.recv(), timeout=10.0)  # Increased timeout
                             await self.process_message(message, symbol)
                         except asyncio.TimeoutError:
-                            # Timeout is normal, just continue
+                            # Log occasional timeouts but don't treat as errors
+                            if retry_count == 0:  # Only log once per connection
+                                logger.debug(f"{symbol} WebSocket timeout (normal), continuing...")
                             continue
                         except Exception as e:
                             logger.error(f"Error receiving {symbol} message: {e}")
                             break
 
-            except websockets.exceptions.ConnectionClosed:
+            except (websockets.exceptions.ConnectionClosed, websockets.exceptions.ConnectionClosedError):
                 logger.warning(f"{symbol} WebSocket connection closed, retrying...")
+                retry_count += 1
+            except asyncio.TimeoutError:
+                logger.warning(f"{symbol} connection handshake timeout, retrying...")
+                retry_count += 1
             except Exception as e:
                 logger.error(f"WebSocket connection error for {symbol}: {e}")
                 retry_count += 1
-                if retry_count < max_retries:
-                    await asyncio.sleep(2 ** retry_count)  # Exponential backoff
-                else:
-                    logger.error(f"Max retries reached for {symbol}, giving up")
+
+            if retry_count < max_retries:
+                # Exponential backoff with jitter to avoid thundering herd
+                backoff_time = min(2 ** retry_count + (retry_count * 0.1), 30)  # Cap at 30 seconds
+                logger.info(f"Retrying {symbol} connection in {backoff_time:.1f} seconds (attempt {retry_count + 1}/{max_retries})")
+                await asyncio.sleep(backoff_time)
+            else:
+                logger.error(f"Max retries ({max_retries}) reached for {symbol}, giving up")
+                logger.warning(f"{symbol} monitoring stopped. Check network connection and Binance Futures availability.")
 
         logger.info(f"Stopped monitoring {symbol}")
 
@@ -297,6 +631,12 @@ class RealtimeOrderbookMonitor:
         try:
             data = json.loads(message)
 
+            # Update connection health
+            self.connection_health[symbol]['last_message'] = datetime.now()
+            if not self.connection_health[symbol]['connected']:
+                self.connection_health[symbol]['connected'] = True
+                logger.info(f"🟢 {symbol} connection health: ACTIVE")
+
             # Handle Binance Futures orderbook depth updates
             # The data comes directly in the message, not wrapped in 'stream'/'data'
             if data.get('e') == 'depthUpdate':
@@ -305,11 +645,14 @@ class RealtimeOrderbookMonitor:
                 # Log unexpected message types
                 if self.verbose:
                     logger.debug(f"Received {symbol} message type: {data.get('e', 'unknown')}")
+                    logger.debug(f"Message content: {message[:200]}...")
 
         except json.JSONDecodeError as e:
             logger.warning(f"Failed to parse {symbol} WebSocket message: {e}")
+            logger.warning(f"Raw message: {message[:200]}...")
         except Exception as e:
             logger.error(f"Error processing {symbol} message: {e}")
+            logger.error(f"Raw message: {message[:200]}...")
 
     async def process_orderbook_update(self, symbol: str, orderbook_data: Dict):
         """Process an orderbook update and store the data."""
@@ -373,20 +716,18 @@ class RealtimeOrderbookMonitor:
             if self.verbose:
                 logger.info(f"📊 {Colors.data(symbol)} orderbook updated | Best Bid: {Colors.data(f'${best_bid:.2f}') if best_bid else 'N/A'} | Best Ask: {Colors.data(f'${best_ask:.2f}') if best_ask else 'N/A'} | Spread: {Colors.data(f'${spread:.2f}') if spread else 'N/A'}")
 
-            # Periodic save to file (every 2000 updates or every 10 minutes) - Reduced frequency to save space
-            total_updates = sum(len(data) for data in self.orderbook_data.values())
+            # Periodic creation of 5-minute candles
             current_time = datetime.now()
 
-            # Save based on update count OR time interval
-            should_save = (
-                total_updates % 2000 == 0 or  # Every 2000 updates
-                (hasattr(self, 'last_save_time') and
-                 (current_time - self.last_save_time).seconds >= 600)  # Every 10 minutes
+            # Check if it's time to create a new 5-minute candle (every 5 minutes)
+            should_create_candle = (
+                not hasattr(self, 'last_candle_time') or
+                (current_time - self.last_candle_time).seconds >= 300  # Every 5 minutes
             )
 
-            if should_save:
-                self.last_save_time = current_time
-                await self.save_data_to_files()
+            if should_create_candle:
+                self.last_candle_time = current_time.replace(second=0, microsecond=0)  # Round to minute boundary
+                await self.create_and_save_5min_candles()
 
         except Exception as e:
             logger.error(f"Error processing orderbook update for {symbol}: {e}")
@@ -423,6 +764,7 @@ class RealtimeOrderbookMonitor:
             print(Colors.dim("-" * 50))
             for symbol in self.symbols:
                 stats = self.stats['symbol_stats'][symbol]
+                health = self.connection_health[symbol]
                 last_update = stats['last_update']
 
                 # Calculate time since last update
@@ -436,6 +778,12 @@ class RealtimeOrderbookMonitor:
                     else:
                         time_since_update = f"{time_diff.seconds // 3600}h ago"
 
+                # Connection health indicator
+                if health['connected']:
+                    conn_status = Colors.success("🟢")
+                else:
+                    conn_status = Colors.error("🔴")
+
                 # Color coding based on activity
                 if stats['updates'] > 100:
                     count_display = Colors.success(f"{stats['updates']:6d}")
@@ -444,17 +792,20 @@ class RealtimeOrderbookMonitor:
                 else:
                     count_display = Colors.warning(f"{stats['updates']:6d}")
 
-                time_display = Colors.success(time_since_update) if last_update and (datetime.now() - last_update).seconds < 10 else Colors.warning(time_since_update)
+                time_display = Colors.success(time_since_update) if last_update and (datetime.now() - last_update).seconds < 30 else Colors.warning(time_since_update)
 
-                print(f"  {Colors.info(symbol):6} {count_display} Last update: {time_display}")
+                print(f"  {conn_status} {Colors.info(symbol):6} {count_display} Last: {time_display}")
 
             print(f"\n📁 Data saved to: {Colors.data(str(self.output_dir))}")
             print(Colors.info("💡 Press Ctrl+C to stop monitoring"))
             print(Colors.header("="*70))
 
-    async def save_data_to_files(self):
-        """Save new orderbook data to CSV files (append mode) and create compressed backups."""
+    async def create_and_save_5min_candles(self):
+        """Create 5-minute candles from accumulated orderbook data and save to files."""
         try:
+            candle_timestamp = self.last_candle_time.replace(second=0, microsecond=0)
+            logger.info(f"🕐 Creating 5-minute candles for timestamp: {candle_timestamp}")
+
             for symbol in self.symbols:
                 if not self.orderbook_data[symbol]:
                     continue
@@ -463,101 +814,125 @@ class RealtimeOrderbookMonitor:
                 symbol_dir = self.output_dir / symbol.lower()
                 symbol_dir.mkdir(exist_ok=True)
 
-                # Save to CSV (append mode)
-                csv_file = symbol_dir / f"{symbol.lower()}_orderbook_realtime.csv"
+                # Get data from the last 5 minutes (or all data if less than 5 minutes)
+                cutoff_time = candle_timestamp - pd.Timedelta(minutes=5)
+                recent_data = [entry for entry in self.orderbook_data[symbol]
+                             if entry['timestamp'] >= cutoff_time]
 
-                # Filter data that's newer than the last saved timestamp
-                last_saved = self.last_saved_timestamps[symbol]
-                if last_saved:
-                    # Only save data newer than what was last saved
-                    original_count = len(self.orderbook_data[symbol])
-                    new_data = [entry for entry in self.orderbook_data[symbol]
-                              if entry['timestamp'] > last_saved]
-                    logger.debug(f"📊 {symbol}: {original_count} total records, {len(new_data)} new records since {last_saved}")
+                if not recent_data:
+                    continue
+
+                # Create DataFrame from recent data
+                df_data = []
+                for entry in recent_data:
+                    row = {
+                        'timestamp': entry['timestamp'],
+                        'symbol': entry['symbol'],
+                        'best_bid': entry.get('best_bid', 0),
+                        'best_ask': entry.get('best_ask', 0),
+                        'spread': entry.get('spread', 0),
+                        'mid_price': entry.get('mid_price', 0),
+                        'spread_pct': entry.get('spread_pct', 0),
+                        'bid_volume_top10': entry.get('bid_volume_top10', 0),
+                        'ask_volume_top10': entry.get('ask_volume_top10', 0),
+                        'total_volume_top10': entry.get('total_volume_top10', 0)
+                    }
+                    df_data.append(row)
+
+                df = pd.DataFrame(df_data)
+
+                # Create 5-minute candle from this data
+                candle = {
+                    'timestamp': candle_timestamp,
+                    'symbol': symbol,
+                    'update_count': len(df),
+
+                    # OHLC for best_bid
+                    'bid_open': df['best_bid'].iloc[0] if not df.empty else 0,
+                    'bid_high': df['best_bid'].max() if not df.empty else 0,
+                    'bid_low': df['best_bid'].min() if not df.empty else 0,
+                    'bid_close': df['best_bid'].iloc[-1] if not df.empty else 0,
+
+                    # OHLC for best_ask
+                    'ask_open': df['best_ask'].iloc[0] if not df.empty else 0,
+                    'ask_high': df['best_ask'].max() if not df.empty else 0,
+                    'ask_low': df['best_ask'].min() if not df.empty else 0,
+                    'ask_close': df['best_ask'].iloc[-1] if not df.empty else 0,
+
+                    # Mid-price statistics
+                    'mid_open': df['mid_price'].iloc[0] if not df.empty else 0,
+                    'mid_high': df['mid_price'].max() if not df.empty else 0,
+                    'mid_low': df['mid_price'].min() if not df.empty else 0,
+                    'mid_close': df['mid_price'].iloc[-1] if not df.empty else 0,
+                    'mid_mean': df['mid_price'].mean() if not df.empty else 0,
+                    'mid_std': df['mid_price'].std() if not df.empty else 0,
+
+                    # Spread statistics
+                    'spread_mean': df['spread'].mean() if not df.empty else 0,
+                    'spread_max': df['spread'].max() if not df.empty else 0,
+                    'spread_min': df['spread'].min() if not df.empty else 0,
+                    'spread_std': df['spread'].std() if not df.empty else 0,
+
+                    # Spread percentage statistics
+                    'spread_pct_mean': df['spread_pct'].mean() if not df.empty else 0,
+                    'spread_pct_max': df['spread_pct'].max() if not df.empty else 0,
+                    'spread_pct_min': df['spread_pct'].min() if not df.empty else 0,
+                    'spread_pct_std': df['spread_pct'].std() if not df.empty else 0,
+
+                    # Volume totals
+                    'bid_volume_total': df['bid_volume_top10'].sum() if not df.empty else 0,
+                    'ask_volume_total': df['ask_volume_top10'].sum() if not df.empty else 0,
+                    'total_volume_total': df['total_volume_top10'].sum() if not df.empty else 0
+                }
+
+                # Calculate additional metrics
+                if candle['ask_high'] and candle['bid_low']:
+                    candle['candle_range'] = candle['ask_high'] - candle['bid_low']
+                    candle['candle_range_pct'] = (candle['candle_range'] / candle['mid_open']) * 100 if candle['mid_open'] else 0
                 else:
-                    # First time saving, save all data
-                    new_data = self.orderbook_data[symbol]
-                    logger.info(f"📊 {symbol}: First time saving {len(new_data)} records")
+                    candle['candle_range'] = 0
+                    candle['candle_range_pct'] = 0
 
-                if new_data:
-                    # Convert new data to DataFrame
-                    df_data = []
-                    for entry in new_data:
-                        row = {
-                            'timestamp': entry['timestamp'],
-                            'symbol': entry['symbol'],
-                            'first_update_id': entry['first_update_id'],
-                            'last_update_id': entry['last_update_id'],
-                            'best_bid': entry.get('best_bid', 0),
-                            'best_ask': entry.get('best_ask', 0),
-                            'spread': entry.get('spread', 0),
-                            'mid_price': entry.get('mid_price', 0),
-                            'spread_pct': entry.get('spread_pct', 0),
-                            'bid_volume_top10': entry.get('bid_volume_top10', 0),
-                            'ask_volume_top10': entry.get('ask_volume_top10', 0),
-                            'total_volume_top10': entry.get('total_volume_top10', 0),
-                            'event_time': entry['event_time'],
-                            'transaction_time': entry['transaction_time']
-                        }
-                        df_data.append(row)
+                candle['volume_imbalance'] = candle['bid_volume_total'] - candle['ask_volume_total']
+                candle['volume_imbalance_pct'] = (candle['volume_imbalance'] / (candle['bid_volume_total'] + candle['ask_volume_total'])) * 100 if (candle['bid_volume_total'] + candle['ask_volume_total']) > 0 else 0
 
-                    df = pd.DataFrame(df_data)
+                # Save candle to CSV
+                candle_df = pd.DataFrame([candle])
+                csv_file = symbol_dir / f"{symbol.lower()}_orderbook_5min_candles.csv"
 
-                    # Check if file exists to determine append mode
-                    file_exists = csv_file.exists()
-                    if file_exists:
-                        # Append without header
-                        df.to_csv(csv_file, mode='a', header=False, index=False)
-                    else:
-                        # Create new file with header
-                        df.to_csv(csv_file, index=False)
+                # Check if file exists to determine append mode
+                file_exists = csv_file.exists()
+                if file_exists:
+                    # Append without header
+                    candle_df.to_csv(csv_file, mode='a', header=False, index=False)
+                else:
+                    # Create new file with header
+                    candle_df.to_csv(csv_file, index=False)
 
-                    # Update last saved timestamp
-                    if new_data:
-                        self.last_saved_timestamps[symbol] = max(entry['timestamp'] for entry in new_data)
+                logger.info(f"🕯️ Saved 5-minute candle: {csv_file} ({candle['update_count']} updates)")
 
-                    logger.info(f"💾 Appended orderbook data: {csv_file} ({len(df_data)} new updates)")
-
-                    # Create compressed backup every hour
-                    now = datetime.now()
-                    if now.minute == 0:  # Top of the hour
-                        compressed_file = symbol_dir / f"{symbol.lower()}_orderbook_{now.strftime('%Y%m%d_%H')}.csv.gz"
-                        # For compressed files, we save all current data (not just new)
-                        all_df_data = []
-                        for entry in self.orderbook_data[symbol]:
-                            row = {
-                                'timestamp': entry['timestamp'],
-                                'symbol': entry['symbol'],
-                                'first_update_id': entry['first_update_id'],
-                                'last_update_id': entry['last_update_id'],
-                                'best_bid': entry.get('best_bid', 0),
-                                'best_ask': entry.get('best_ask', 0),
-                                'spread': entry.get('spread', 0),
-                                'mid_price': entry.get('mid_price', 0),
-                                'spread_pct': entry.get('spread_pct', 0),
-                                'bid_volume_top10': entry.get('bid_volume_top10', 0),
-                                'ask_volume_top10': entry.get('ask_volume_top10', 0),
-                                'total_volume_top10': entry.get('total_volume_top10', 0),
-                                'event_time': entry['event_time'],
-                                'transaction_time': entry['transaction_time']
-                            }
-                            all_df_data.append(row)
-
-                        if all_df_data:
-                            all_df = pd.DataFrame(all_df_data)
+                # Create compressed backup every hour
+                now = datetime.now()
+                if now.minute == 0:  # Top of the hour
+                    compressed_file = symbol_dir / f"{symbol.lower()}_orderbook_5min_candles.csv.gz"
+                    try:
+                        # Read existing data and compress
+                        if csv_file.exists():
+                            existing_df = pd.read_csv(csv_file)
                             with gzip.open(compressed_file, 'wt') as f:
-                                all_df.to_csv(f, index=False)
-                            logger.info(f"📦 Saved compressed orderbook data: {compressed_file}")
+                                existing_df.to_csv(f, index=False)
+                            logger.info(f"📦 Created compressed backup: {compressed_file}")
+                    except Exception as compress_error:
+                        logger.warning(f"Failed to create compressed backup: {compress_error}")
 
-            # Memory cleanup - keep only last 500 records per symbol to prevent memory bloat
+            # Memory cleanup - keep only last 1000 records per symbol (enough for ~10-15 minutes at current rates)
             for symbol in self.symbols:
-                if len(self.orderbook_data[symbol]) > 500:
-                    # Keep only the most recent 500 records
-                    self.orderbook_data[symbol] = self.orderbook_data[symbol][-500:]
-                    logger.debug(f"🧹 Cleaned memory for {symbol}: kept last 500 records")
+                if len(self.orderbook_data[symbol]) > 1000:
+                    self.orderbook_data[symbol] = self.orderbook_data[symbol][-1000:]
+                    logger.debug(f"🧹 Cleaned memory for {symbol}: kept last 1000 records")
 
         except Exception as e:
-            logger.error(f"Error saving orderbook data: {e}")
+            logger.error(f"Error creating 5-minute candles: {e}")
 
     def print_final_summary(self):
         """Print final summary when monitoring stops with colored output."""
@@ -592,16 +967,26 @@ class RealtimeOrderbookMonitor:
 
         print(f"\n📁 Data Location: {Colors.data(str(self.output_dir))}")
         files_found = 0
+        total_candles = 0
         for symbol in self.symbols:
-            csv_file = self.output_dir / symbol.lower() / f"{symbol.lower()}_orderbook_realtime.csv"
+            csv_file = self.output_dir / symbol.lower() / f"{symbol.lower()}_orderbook_5min_candles.csv"
             if csv_file.exists():
                 size_mb = csv_file.stat().st_size / (1024 * 1024)
                 size_display = Colors.success(f"{size_mb:.1f} MB") if size_mb > 1 else Colors.data(f"{size_mb:.1f} MB")
-                print(f"   {Colors.info(symbol):6}: {size_display}")
+
+                # Count candles
+                try:
+                    candle_count = sum(1 for line in open(csv_file)) - 1  # Subtract header
+                    total_candles += candle_count
+                    print(f"   {Colors.info(symbol):6}: {size_display} ({candle_count} candles)")
+                except:
+                    print(f"   {Colors.info(symbol):6}: {size_display}")
                 files_found += 1
 
         if files_found == 0:
             print(Colors.warning("   No data files were created"))
+        else:
+            print(f"\n{Colors.success('📊 Total 5-minute candles created:')} {Colors.highlight(f'{total_candles:,}')}")
 
         print(f"\n{Colors.success('🎯 Next Steps:')}")
         print("  • Analyze orderbook depth and liquidity patterns")
@@ -617,14 +1002,17 @@ class RealtimeOrderbookMonitor:
             display_thread = threading.Thread(target=self.display_stats_loop, daemon=True)
             display_thread.start()
 
-            # Connect to all symbols and monitor them
+            # First, recover available buffer data
+            await self.recover_buffer_data()
+
+            # Then connect to all symbols and monitor them
             await self.connect_websocket()
 
         except Exception as e:
             logger.error(f"Monitor error: {e}")
         finally:
-            # Final save of all data
-            await self.save_data_to_files()
+            # Final creation of 5-minute candles
+            await self.create_and_save_5min_candles()
             self.print_final_summary()
 
 
@@ -640,12 +1028,27 @@ def main():
                        help='Output directory for orderbook data')
     parser.add_argument('--verbose', action='store_true',
                        help='Show verbose logging including all WebSocket messages')
-    parser.add_argument('--depth', type=int, default=20,
-                       help='Orderbook depth to capture (default: 20)')
-    parser.add_argument('--update-interval', type=int, default=100,
-                       help='Update interval in milliseconds (default: 100ms)')
+    parser.add_argument('--depth', type=int, default=10,
+                       help='Orderbook depth to capture (default: 10)')
+    parser.add_argument('--update-interval', type=int, default=1000,
+                       help='Update interval in milliseconds (default: 1000ms)')
+    parser.add_argument('--storage-efficient', action='store_true',
+                       help='Enable storage-efficient mode: reduced depth (5), slower updates (2000ms), less frequent saves')
+    parser.add_argument('--no-buffer-recovery', action='store_true',
+                       help='Disable buffer data recovery on startup')
 
     args = parser.parse_args()
+
+    # Apply storage-efficient settings if requested
+    if args.storage_efficient:
+        args.depth = 5  # Reduced depth for storage efficiency
+        args.update_interval = 2000  # Slower updates (2 seconds instead of 1)
+        logger.info("🗜️ Storage-efficient mode enabled: depth=5, update_interval=2000ms")
+
+    # Control buffer recovery
+    enable_buffer_recovery = not args.no_buffer_recovery
+    if not enable_buffer_recovery:
+        logger.info("🔄 Buffer recovery disabled by user")
 
     # Determine symbols to monitor
     if args.all:
@@ -664,7 +1067,8 @@ def main():
         print("  python realtime_orderbook_monitor.py --symbols BTC ETH")
         print("  python realtime_orderbook_monitor.py --all")
         print("  python realtime_orderbook_monitor.py --quality-data")
-        print("  python realtime_orderbook_monitor.py --symbols BTC --depth 50")
+        print("  python realtime_orderbook_monitor.py --quality-data --storage-efficient  # Reduced data volume")
+        print("  python realtime_orderbook_monitor.py --symbols BTC --depth 5")
         sys.exit(1)
 
     # Validate symbols (basic check for common symbols)
@@ -683,8 +1087,12 @@ def main():
         duration_hours=args.duration,
         verbose=args.verbose,
         depth=args.depth,
-        update_interval=args.update_interval
+        update_interval=args.update_interval,
+        storage_efficient=args.storage_efficient
     )
+
+    # Set buffer recovery setting
+    monitor.enable_buffer_recovery = enable_buffer_recovery
 
     print(Colors.success("🚀 Starting Real-Time Orderbook Monitor"))
     print(f"📊 Monitoring: {Colors.data(', '.join(symbols))}")

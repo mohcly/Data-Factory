@@ -1,0 +1,86 @@
+{
+  "kline_limits": {
+    "1 week ago": {
+      "available": true,
+      "candles_returned": 10,
+      "oldest_data": "2025-10-12T22:00:00",
+      "newest_data": "2025-10-12T22:45:00",
+      "days_coverage": 0
+    },
+    "1 month ago": {
+      "available": true,
+      "candles_returned": 10,
+      "oldest_data": "2025-09-19T22:00:00",
+      "newest_data": "2025-09-19T22:45:00",
+      "days_coverage": 0
+    },
+    "3 months ago": {
+      "available": true,
+      "candles_returned": 10,
+      "oldest_data": "2025-07-21T22:00:00",
+      "newest_data": "2025-07-21T22:45:00",
+      "days_coverage": 0
+    },
+    "6 months ago": {
+      "available": true,
+      "candles_returned": 10,
+      "oldest_data": "2025-04-22T22:05:00",
+      "newest_data": "2025-04-22T22:50:00",
+      "days_coverage": 0
+    },
+    "1 year ago": {
+      "available": true,
+      "candles_returned": 10,
+      "oldest_data": "2024-10-19T22:05:00",
+      "newest_data": "2024-10-19T22:50:00",
+      "days_coverage": 0
+    },
+    "2 years ago": {
+      "available": true,
+      "candles_returned": 10,
+      "oldest_data": "2023-10-20T22:05:00",
+      "newest_data": "2023-10-20T22:50:00",
+      "days_coverage": 0
+    },
+    "3 years ago": {
+      "available": true,
+      "candles_returned": 10,
+      "oldest_data": "2022-10-20T22:05:00",
+      "newest_data": "2022-10-20T22:50:00",
+      "days_coverage": 0
+    }
+  },
+  "trade_limits": {
+    "1 day ago": {
+      "available": true,
+      "trades_returned": 10,
+      "oldest_trade": "2025-10-18T22:00:08.872000",
+      "newest_trade": "2025-10-18T22:00:12.062000"
+    },
+    "3 days ago": {
+      "available": true,
+      "trades_returned": 10,
+      "oldest_trade": "2025-10-16T22:00:10.381000",
+      "newest_trade": "2025-10-16T22:00:10.609000"
+    },
+    "1 week ago": {
+      "available": true,
+      "trades_returned": 10,
+      "oldest_trade": "2025-10-12T22:00:11.810000",
+      "newest_trade": "2025-10-12T22:00:12.019000"
+    },
+    "2 weeks ago": {
+      "available": true,
+      "trades_returned": 10,
+      "oldest_trade": "2025-10-05T22:00:13.418000",
+      "newest_trade": "2025-10-05T22:00:13.732000"
+    },
+    "1 month ago": {
+      "available": true,
+      "trades_returned": 10,
+      "oldest_trade": "2025-09-19T22:00:15.213000",
+      "newest_trade": "2025-09-19T22:00:18.433000"
+    }
+  },
+  "test_timestamp": "2025-10-19T22:00:16.149251"
+}
